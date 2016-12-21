@@ -72,7 +72,10 @@ function run_EDUPlugin() {
          */
 
         // GithubReadmePlugin
-        $gh = new Github( 'NeuroTechX', 'Access Code' );
+        $options = get_option('github');
+        $user = isset($options['user']) ? $options['user'] : "";
+        $token = isset($options['token']) ? $options['token'] : "";
+        $gh = new Github( $user, $token );
         $ghplugin = new GithubReadmePlugin( $gh, "NeuroTechX", "awesome-bci" ,
                                             array("Resources"), array("page"), "html" );
         $EDUPlugin->add_filter( 'the_content',
@@ -80,9 +83,9 @@ function run_EDUPlugin() {
 
         // EDUPluginAdmin
         $adminplugin = new EDUPluginAdmin();
-	$EDUPlugin->add_action( 'admin_menu',
+        $EDUPlugin->add_action( 'admin_menu',
                                 array( $adminplugin, 'EDUPlugin_add_plugin_page' ) );
-	$EDUPlugin->add_action( 'admin_init',
+        $EDUPlugin->add_action( 'admin_init',
                                 array( $adminplugin, 'EDUPlugin_page_init' ) );
 
         /*
