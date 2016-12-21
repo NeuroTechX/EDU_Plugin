@@ -34,8 +34,8 @@ class GithubReadmePlugin
                         } else {
                                 $content = $r;
                         }
-                        return $content;
                 }
+                return $content;
         }
 }
 
