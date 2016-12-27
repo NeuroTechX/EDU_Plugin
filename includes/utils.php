@@ -137,4 +137,24 @@ class Github
         }
 }
 
+
+/**
+ * Wrapper to print a section's info in the admin page.
+ */
+class PrintSection
+{
+
+        /**
+         * @text        Text to be printed
+         */
+        function __construct( $text ) {
+                $this->text = $text;
+        }
+
+        function print_section_info() {
+                echo $this->text;
+        }
+}
+
+
 ?>

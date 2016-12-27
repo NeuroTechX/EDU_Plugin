@@ -1,4 +1,5 @@
 === EDU Plugin ===
+
 Contributors: Kenny Lee Sin Cheong
 Requires at least: 1.0
 Stable tag: 1.0
@@ -6,6 +7,19 @@ Tested up to: 1.0
 
 NeuroTechEdu plugin to interact with Github.
 
+
 == Description ==
 
-NeuroTechEdu plugin to interact with Github.
+The EDUPlugin is a loader used to load the plugins in the includes/ directory, including the admin settings page.
+By convention, the plugins in includes are named <plugin_name>Plugin.php .
+
+To write additional plugins, the callbacks are wrapped by a class to allow different configurations.
+The class contains two methods:
+    - The constructor
+    - The callback
+    
+The class constructor is used to set the states of the plugin.
+The callback is the function that gets called then the wordpress hook gets triggered.
+See includes/GithubReadmePlugin.php as for example.
+
+The plugin is then loaded in EDU_Plugin.php .

@@ -3,6 +3,9 @@
  * Options pages
  */
 
+require_once('utils.php');
+
+
 class EDUPluginAdmin
 {
 
@@ -36,7 +39,10 @@ class EDUPluginAdmin
 
                 $default_values = array (
                         'user' => '',
-                        'token'  => ''
+                        'token'  => '',
+                        'readme_owner'  => '',
+                        'readme_repo' => '',
+                        'page_ids' => ''
                 );
 
                 $data = shortcode_atts( $default_values, $option_values );
@@ -46,16 +52,19 @@ class EDUPluginAdmin
                         $option_name,      // Option name
                         array( $this, 'sanitize' ) // Callback
                 );
+                
+                // General Github settings
+                $print_github_auth = new PrintSection('Authorization');
                 add_settings_section(
                         'github_settings_section',
                         'Github Settings',
-                        array( $this, 'print_section_info' ),
+                        array( $print_github_auth, 'print_section_info' ),
                         'EDUPlugin-settings'
-                );  
+                );
                 add_settings_field(
                         'github_user',
                         'User',
-                        array( $this, 'user_input_callback' ),
+                        array( $this, 'input_callback' ),
                         'EDUPlugin-settings',
                         'github_settings_section',
                         array(
@@ -69,7 +78,7 @@ class EDUPluginAdmin
                 add_settings_field(
                         'github_token',
                         'Token',
-                        array( $this, 'token_input_callback' ),
+                        array( $this, 'input_callback' ),
                         'EDUPlugin-settings',
                         'github_settings_section',
                         array(
@@ -79,24 +88,57 @@ class EDUPluginAdmin
                                 'option_name' => $option_name
                         )
                 );
-        }
-
-        function print_section_info() {
-                echo 'Authorization';
-        }
-
-        public function user_input_callback( $args )
-        {
-                printf(
-                        '<input id="%s" type="text" value="%s" name="%s[%s]" />',
-                        $args['label_for'],
-                        $args['value'],
-                        $args['option_name'],
-                        $args['name']
+                
+                // Github readme plugin
+                $print_github_readme = new PrintSection('Repo Info');
+                add_settings_section(
+                        'github_readme_plugin_settings_section',
+                        'Github Readme Plugin Settings',
+                        array( $print_github_readme, 'print_section_info' ),
+                        'EDUPlugin-settings'
+                );
+                add_settings_field(
+                        'github_readme_owner',
+                        'Repo Owner',
+                        array( $this, 'input_callback' ),
+                        'EDUPlugin-settings',
+                        'github_readme_plugin_settings_section',
+                        array(
+                                'label_for'   => 'ownerInput',
+                                'name'        => 'readme_owner',
+                                'value'       => esc_attr( $data['readme_owner'] ),
+                                'option_name' => $option_name
+                        )
+                );
+                add_settings_field(
+                        'github_readme_repo',
+                        'Repo',
+                        array( $this, 'input_callback' ),
+                        'EDUPlugin-settings',
+                        'github_readme_plugin_settings_section',
+                        array(
+                                'label_for'   => 'repoInput',
+                                'name'        => 'readme_repo',
+                                'value'       => esc_attr( $data['readme_repo'] ),
+                                'option_name' => $option_name
+                        )
+                );
+                add_settings_field(
+                        'github_readme_pages',
+                        'Page ID(s)',
+                        array( $this, 'input_callback' ),
+                        'EDUPlugin-settings',
+                        'github_readme_plugin_settings_section',
+                        array(
+                                'label_for'   => 'pagesInput',
+                                'name'        => 'page_ids',
+                                'value'       => esc_attr( $data['page_ids'] ),
+                                'option_name' => $option_name
+                        )
                 );
         }
 
-        public function token_input_callback( $args )
+        function input_callback( $args )
         {
                 printf(
                         '<input id="%s" type="text" value="%s" name="%s[%s]" />',

@@ -71,13 +71,20 @@ function run_EDUPlugin() {
          * Set up the plugins and load the hooks.
          */
 
-        // GithubReadmePlugin
+        // Github Options
         $options = get_option('github');
-        $user = isset($options['user']) ? $options['user'] : "";
-        $token = isset($options['token']) ? $options['token'] : "";
+        $user = isset( $options['user'] ) ? $options['user'] : "";
+        $token = isset( $options['token'] ) ? $options['token'] : "";
         $gh = new Github( $user, $token );
-        $ghplugin = new GithubReadmePlugin( $gh, "NeuroTechX", "awesome-bci" ,
-                                            array("Resources"), array("page"), "html" );
+        
+        // GithubReadmePlugin
+        $owner = isset( $options['readme_owner'] ) ? $options['readme_owner'] : "";
+        $repo = isset( $options['readme_repo'] ) ? $options['readme_repo'] : "";
+        $page_ids = isset( $options['page_ids'] ) ? explode( ',', $options['page_ids'] ) : array();
+        foreach( $page_ids as $id ) {
+                $id = intval( trim($id) );
+        }
+        $ghplugin = new GithubReadmePlugin( $gh, $owner, $repo, $page_ids, "html" );
         $EDUPlugin->add_filter( 'the_content',
                                 array( $ghplugin, 'callback_github_readme' ) );
 

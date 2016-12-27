@@ -13,18 +13,17 @@ class GithubReadmePlugin
          * @post_type           Array of post types to apply this plugin to
          * @output_type         Output type of the content
          */
-        function __construct( $gh, $owner, $repo, $post_title, $post_type, $output_type="html" ) {
+        function __construct( $gh, $owner, $repo, $post_ids, $output_type="html" ) {
                 $this->gh = $gh;
                 $this->owner = $owner;
                 $this->repo = $repo;
-                $this->post_title = $post_title;
-                $this->post_type = $post_type;
+                $this->post_ids = $post_ids;
                 $this->output_type = $output_type;
         }
 
         function callback_github_readme($content) {
                 $p = get_post();
-                if ( in_array( $p->post_title, $this->post_title ) && in_array( $p->post_type, $this->post_type ) ) {
+                if ( in_array( $p->ID, $this->post_ids ) )  {
                         $r = $this->gh->get_readme( $this->owner, $this->repo );
                         if ( $this->output_type == "html" ) {
                                 $Parsedown = new Parsedown();
