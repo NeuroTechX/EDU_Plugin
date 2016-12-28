@@ -30,6 +30,7 @@ class GithubReadmePlugin
                                 $Parsedown->setMarkupEscaped( true );
                                 $html = $Parsedown->text( $r );
                                 $content = Github::add_anchors_to_headings( $html );
+                                $content = Github::add_target_blank_to_links( $content );
                         } else {
                                 $content = $r;
                         }

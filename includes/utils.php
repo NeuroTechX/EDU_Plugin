@@ -112,10 +112,9 @@ class Github
          *
          * This to allow the anchors to link to fragments.
          *
-         * @html        Html string.
+         * @html        Html string
          */
-        static function add_anchors_to_headings( $html )
-        {
+        static function add_anchors_to_headings( $html ) {
                 $doc = new DOMDocument();
                 $doc->loadHTML( $html );
                 // <h1> to <h6>
@@ -131,6 +130,25 @@ class Github
                                 $anchor->setAttribute( "style", "display:hidden;" );
                                 // $hh->appendChild( $anchor );
                                 $hh->parentNode->insertBefore( $anchor, $hh );
+                        }
+                }
+                return $doc->saveHTML();
+        }
+        
+        /**
+         * Open links in new tabs.
+         *
+         * @html        Html string
+         */
+        static function add_target_blank_to_links( $html ) {
+                $doc = new DOMDocument();
+                $doc->loadHTML( $html );
+
+                $anchors = $doc->getElementsByTagName( 'a' );
+                foreach ( $anchors as $a ) {
+                        if ( $a->hasAttribute( 'href' ) &&
+                             ! startsWith( $a->getAttribute( 'href' ), '#' ) ) {
+                                $a->setAttribute( 'target', '_blank' );
                         }
                 }
                 return $doc->saveHTML();
