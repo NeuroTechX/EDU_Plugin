@@ -38,9 +38,13 @@ class HttpRequest
                 curl_setopt_array( $ch, $options );
                 
                 $content = curl_exec( $ch );
+		$status_code = curl_getinfo( $ch, CURLINFO_HTTP_CODE );
                 curl_close( $ch );
                 
-                return $content;
+                return array(
+                        'content' => $content,
+                        'status_code' => $status_code
+                );
         }
 
         static function debug( $url="", $headers=array(),
@@ -77,13 +81,13 @@ class Github
 {
         
         static $url = 'https://api.github.com';
+        static $url_web = 'https://github.com';
 
         /**
          * @user        User (needed to set User-Agent header)
          * @token       Access token
          */
-        function __construct( $user, $token )
-        {
+        function __construct( $user, $token ) {
                 $this->user = $user;
                 $this->token = $token;
                 $this->headers = array(
@@ -96,13 +100,26 @@ class Github
          * @owner       User owning the repo
          * @repo        The repo's name
          */
-        function get_readme( $owner, $repo )
-        {
+        function get_readme( $owner, $repo ) {
                 $endpoint = '/repos/' . $owner . '/' . $repo . '/readme';
                 $request_url = Github::$url . $endpoint;
-                $r = HttpRequest::get( $request_url, $this->headers );
+                $r = HttpRequest::get( $request_url, $this->headers )['content'];
                 $json = json_decode( $r, true );
-                return HttpRequest::get( $json['download_url'] );
+                return HttpRequest::get( $json['download_url'] )['content'];
+        }
+
+        function get_repo_url( $owner, $repo ) {
+                $endpoint = '/' . $owner . '/' . $repo;
+                $request_url = Github::$url_web . $endpoint;
+                $status_code = HttpRequest::get(
+                        $request_url,
+                        $this->headers
+                )['status_code'];
+                if ( $status_code == 404 ) {
+                        return false;
+                } else {
+                        return $request_url;
+                }
         }
 
         /**

@@ -29,8 +29,23 @@ class GithubReadmePlugin
                                 $Parsedown = new Parsedown();
                                 $Parsedown->setMarkupEscaped( true );
                                 $html = $Parsedown->text( $r );
-                                $content = Github::add_anchors_to_headings( $html );
-                                $content = Github::add_target_blank_to_links( $content );
+                                
+                                $repo_url = $this->gh->get_repo_url( $this->owner, $this->repo );
+
+                                // Create link to repo
+                                $dom = new DOMDocument();
+                                $p = $dom->createElement( 'p' );
+                                $p->textContent = "To contribute to this list, go to ";
+                                $a = $dom->createElement( 'a' );
+                                $a->setAttribute( 'href', $repo_url );
+                                $a->textContent = 'Github';
+                                $p->appendChild( $a );
+                                $dom->appendChild( $p );
+                                
+                                $content = $dom->saveHTML();
+                                $content .= Github::add_target_blank_to_links(
+                                        Github::add_anchors_to_headings( $html )
+                                );
                         } else {
                                 $content = $r;
                         }
