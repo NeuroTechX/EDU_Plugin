@@ -10,16 +10,45 @@ NeuroTechEdu plugin to interact with Github.
 
 == Description ==
 
-The EDUPlugin is a loader used to load the plugins in the includes/ directory, including the admin settings page.
-By convention, the plugins in includes are named <plugin_name>Plugin.php .
+Plugins used by the NeuroTechEDU website.
 
-To write additional plugins, the callbacks are wrapped by a class to allow different configurations.
+
+== Extending the EDUPlugin with new plugins ==
+
+The EDUPlugin is just a loader used to load the plugins in the includes/ directory, including the admin settings page.
+By convention, the plugins in includes are named <plugin_name>Plugin.php (such files are "php included" automatically).
+
+To write additional plugins, the callbacks are wrapped in a class to allow different configurations through the class's member attributes.
 The class contains two methods:
     - The constructor
     - The callback
     
 The class constructor is used to set the states of the plugin.
-The callback is the function that gets called then the wordpress hook gets triggered.
-See includes/GithubReadmePlugin.php as for example.
+The callback is the function that gets called when the wordpress hook gets triggered.
+See includes/GithubReadmePlugin.php as an example.
 
 The plugin is then loaded in EDU_Plugin.php .
+To load a plugin, instantiate an instance of that plugin in the run_EDUPlugin function of the EDU_Plugin.php file,
+along with the necessary parameters that the class constructor requires.
+Depending on the plugin's use case, call add_action or add_filter member method of the EDUPlugin instance,
+passing the hook, and an array containing an instance of the plugin and the name of the callback.
+e.g. $ghplugin = new GithubReadmePlugin( $gh, $owner, $repo, $page_ids, "html" );
+     $EDUPlugin->add_filter( 'the_content',
+                             array( $ghplugin, 'callback_github_readme' ) );
+
+To add additional options to the plugin's admin page, add the settings' section and field in the
+EDUPlugin_page_init callback of the EDUPluginAdmin class in EDUPluginAdmin.php.
+See
+    - https://codex.wordpress.org/Function_Reference/add_settings_section
+    - https://codex.wordpress.org/Function_Reference/add_settings_field
+                             
+
+== GithubReadmePlugin ==
+
+The GithubReadmePlugin set the content of a post (post or page) to the content of a Github Repo's readme.
+The parameters that must be set from the settings page are:
+     - User accessing Github's API
+     - User token
+     - Repo owner
+     - Repo name
+     - A list of comma separated page ids on which to apply the plugin

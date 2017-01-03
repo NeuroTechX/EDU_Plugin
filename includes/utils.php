@@ -2,6 +2,7 @@
 /**
  * Utilities classes and functions.
  */
+
 require_once 'Parsedown.php';
 
 
@@ -38,7 +39,7 @@ class HttpRequest
                 curl_setopt_array( $ch, $options );
                 
                 $content = curl_exec( $ch );
-		$status_code = curl_getinfo( $ch, CURLINFO_HTTP_CODE );
+                $status_code = curl_getinfo( $ch, CURLINFO_HTTP_CODE );
                 curl_close( $ch );
                 
                 return array(
@@ -75,7 +76,7 @@ class HttpRequest
 
 
 /**
- * Wrapper class for HttpRequest for Github's API specific requests.
+ * Wrapper class for Github's API specific requests.
  */
 class Github
 {
@@ -97,6 +98,11 @@ class Github
         }
 
         /**
+         * Get the readme content of the given repo.
+         *
+         * The return value is an array containing the response.
+         * See HttpRequest.
+         *
          * @owner       User owning the repo
          * @repo        The repo's name
          */
@@ -108,6 +114,13 @@ class Github
                 return HttpRequest::get( $json['download_url'] )['content'];
         }
 
+        /**
+         * Get the repo's web url.
+         * e.g. https://github.com/NeuroTechX/EDU_Plugin
+         *
+         * @owner       User owning the repo
+         * @repo        The repo's name
+         */
         function get_repo_url( $owner, $repo ) {
                 $endpoint = '/' . $owner . '/' . $repo;
                 $request_url = Github::$url_web . $endpoint;
@@ -121,13 +134,23 @@ class Github
                         return $request_url;
                 }
         }
+}
 
+
+/**
+ * Various utility functions for HTML processing.
+ */
+class HTMLUtils
+{
         /**
          * Add anchors before headings similar to Github flavored markdown.
-         * e.g. <h1>Heading Value</h1> => 
+         * e.g. <h1>Heading Value</h1> 
+         *
+         *      becomes 
+         *
          *      <a name="heading-value" style="display:none;"></a><h1></h1>
          *
-         * This to allow the anchors to link to fragments.
+         * This is to allow the anchors to link to fragments.
          *
          * @html        Html string
          */
@@ -153,7 +176,8 @@ class Github
         }
         
         /**
-         * Open links in new tabs.
+         * Adds the attribute target="_blank" to hyperlinks (links that does not start with "#").
+         * i.e. Open links in new tabs.
          *
          * @html        Html string
          */
@@ -164,7 +188,7 @@ class Github
                 $anchors = $doc->getElementsByTagName( 'a' );
                 foreach ( $anchors as $a ) {
                         if ( $a->hasAttribute( 'href' ) &&
-                             ! startsWith( $a->getAttribute( 'href' ), '#' ) ) {
+                             ! StringUtils::startsWith( $a->getAttribute( 'href' ), '#' ) ) {
                                 $a->setAttribute( 'target', '_blank' );
                         }
                 }
@@ -186,6 +210,9 @@ class PrintSection
                 $this->text = $text;
         }
 
+        /**
+         * The callback
+         */
         function print_section_info() {
                 echo $this->text;
         }
@@ -193,21 +220,34 @@ class PrintSection
 
 
 /**
- * Strings functions
+ * Various strings utilitiy functions
  */
-function startsWith( $haystack, $needle )
+class StringUtils
 {
-        $length = strlen( $needle );
-        return ( substr( $haystack, 0, $length ) === $needle );
-}
-
-function endsWith( $haystack, $needle )
-{
-        $length = strlen( $needle );
-        if ( $length == 0 ) {
-                return true;
+        /**
+         * Checks if @haystack starts with @needle
+         *
+         * @haystack:   The "complete" string
+         * @needle:     The "substring"
+         */
+        static function startsWith( $haystack, $needle ) {
+                $length = strlen( $needle );
+                return ( substr( $haystack, 0, $length ) === $needle );
         }
-
-        return ( substr( $haystack, -$length ) === $needle );
+        
+        /**
+         * Checks if @haystack ends with @needle
+         *
+         * @haystack:   The "complete" string
+         * @needle:     The "substring"
+         */
+        static function endsWith( $haystack, $needle ) {
+                $length = strlen( $needle );
+                if ( $length == 0 ) {
+                        return true;
+                }
+                return ( substr( $haystack, -$length ) === $needle );
+        }
 }
+
 ?>

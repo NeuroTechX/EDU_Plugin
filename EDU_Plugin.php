@@ -17,7 +17,7 @@ require_once plugin_dir_path( __FILE__ ) . 'includes/EDUPluginAdmin.php';
 // Load the plugins (files should end with *Plugin.php)
 foreach ( scandir( plugin_dir_path( __FILE__ ) . 'includes/' ) as $filename ) {
         $path = plugin_dir_path( __FILE__ ) . 'includes/' . $filename;
-        if ( is_file( $path ) && endsWith( $path, 'Plugin.php' ) ) {
+        if ( is_file( $path ) && StringUtils::endsWith( $path, 'Plugin.php' ) ) {
                 require_once( $path );
         }
 }

@@ -6,9 +6,18 @@
 require_once('utils.php');
 
 
+/**
+ * Settings page for the EDUPlugin.
+ * For Wordpress specific function reference, see:
+ *
+ *      https://codex.wordpress.org/Function_Reference
+ */
 class EDUPluginAdmin
 {
 
+        /**
+         * Callback to the 'admin_menu' hook.
+         */
         function EDUPlugin_add_plugin_page() {
                 add_options_page(
                         'EDUPlugin Settings',
@@ -32,6 +41,15 @@ class EDUPluginAdmin
                         </div>';                
         }
 
+        /**
+         * Callback to the 'admin_init' hook.
+         *
+         * Initialize and register the settings.
+         *
+         * See:
+         *      https://codex.wordpress.org/Function_Reference/add_settings_section
+         *      https://codex.wordpress.org/Function_Reference/add_settings_field
+         */
         function EDUPlugin_page_init() {
                 $option_name = 'github';
 
@@ -138,6 +156,11 @@ class EDUPluginAdmin
                 );
         }
 
+        /**
+         * Outputs an <input> element of type text.
+         *
+         * @args        Assoc array for the <input> attributes.
+         */
         function input_callback( $args )
         {
                 printf(
@@ -149,6 +172,9 @@ class EDUPluginAdmin
                 );
         }
 
+        /**
+         * Sanitize the use inputs.
+         */
         function sanitize( $input ) {
                 // $new_input = array();
                 $new_input = $input;

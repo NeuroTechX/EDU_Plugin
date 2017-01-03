@@ -21,6 +21,9 @@ class GithubReadmePlugin
                 $this->output_type = $output_type;
         }
 
+        /**
+         * The wordpress callback.
+         */
         function callback_github_readme($content) {
                 $p = get_post();
                 if ( in_array( $p->ID, $this->post_ids ) )  {
@@ -43,8 +46,8 @@ class GithubReadmePlugin
                                 $dom->appendChild( $p );
                                 
                                 $content = $dom->saveHTML();
-                                $content .= Github::add_target_blank_to_links(
-                                        Github::add_anchors_to_headings( $html )
+                                $content .= HTMLUtils::add_target_blank_to_links(
+                                        HTMLUtils::add_anchors_to_headings( $html )
                                 );
                         } else {
                                 $content = $r;
