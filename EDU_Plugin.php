@@ -101,6 +101,8 @@ function run_EDUPlugin() {
                                 array( $adminplugin, 'EDUPlugin_add_plugin_page' ) );
         $EDUPlugin->add_action( 'admin_init',
                                 array( $adminplugin, 'EDUPlugin_page_init' ) );
+        $EDUPlugin->add_filter( 'plugin_action_links_' . plugin_basename(__FILE__),
+                                array( $adminplugin, 'EDUPlugin_action_links') );
 
         /*
          * Start the plugin 

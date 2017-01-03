@@ -172,6 +172,17 @@ class EDUPluginAdmin
                 );
         }
 
+	/**
+	 * Callback to add the links on the plugin page.
+	 * (Next to Activate/Deactivate, Edit, ...)
+	 */
+	function EDUPlugin_action_links ( $links ) {
+		$links[] = '<a href="'. 
+			   esc_url( get_admin_url(null, 'options-general.php?page=EDUPlugin-settings') ) .
+			   '">Settings</a>';
+		return $links;
+	}
+
         /**
          * Sanitize the use inputs.
          */
