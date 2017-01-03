@@ -1,11 +1,12 @@
 # EDU Plugin
 
 Contributors: Kenny Lee Sin Cheong
-Requires at least: 1.0
-Stable tag: 1.0
-Tested up to: 1.0
 
-Plugins used by the NeuroTechEDU website.
+Requires at least: 1.0
+
+Stable tag: 1.0
+
+Tested up to: 1.0
 
 
 ## Description
@@ -59,6 +60,7 @@ $EDUPlugin->add_filter( 'the_content',
 
 To add additional options to the plugin's admin page, add the settings' section and field in the
 EDUPlugin_page_init callback of the EDUPluginAdmin class in EDUPluginAdmin.php.
+
 See:
 - https://codex.wordpress.org/Function_Reference/add_settings_section
 - https://codex.wordpress.org/Function_Reference/add_settings_field
@@ -70,11 +72,11 @@ See:
 The GithubReadmePlugin set the content of a post (post or page) to the content of a Github Repo's readme.
 
 The parameters that must be set from the settings page are:
-     - User accessing Github's API
-     - User token
-     - Repo owner
-     - Repo name
-     - A list of comma separated page ids on which to apply the plugin
+- User accessing Github's API
+- User token
+- Repo owner
+- Repo name
+- A list of comma separated page ids on which to apply the plugin
 
 
 # Resources
