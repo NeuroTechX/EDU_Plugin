@@ -35,6 +35,7 @@ class EDUPluginAdmin
                 echo   '<div class="wrap">
                         <form method="post" action="options.php">';
                 settings_fields( 'github_settings' );
+                settings_fields( 'meetup_settings' );
                 do_settings_sections( 'EDUPlugin-settings' );
                 submit_button();
                 echo   '</form>
@@ -51,23 +52,34 @@ class EDUPluginAdmin
          *      https://codex.wordpress.org/Function_Reference/add_settings_field
          */
         function EDUPlugin_page_init() {
-                $option_name = 'github';
-
-                $option_values = get_option( $option_name );
-
-                $default_values = array (
+                $github_option_name = 'github';
+                $github_option_values = get_option( $github_option_name );
+                $github_default_values = array (
                         'user' => '',
                         'token'  => '',
                         'readme_owner'  => '',
                         'readme_repo' => '',
                         'page_ids' => ''
                 );
+                $github_data = shortcode_atts( $github_default_values, $github_option_values );
 
-                $data = shortcode_atts( $default_values, $option_values );
+                $meetup_option_name = 'meetup';
+                $meetup_option_values = get_option( $meetup_option_name );
+                $meetup_default_values = array (
+                        'key' => '',
+                        'groups'  => ''
+                );
+                $meetup_data = shortcode_atts( $meetup_default_values, $meetup_option_values );
 
                 register_setting(
                         'github_settings', // Option group
-                        $option_name,      // Option name
+                        $github_option_name,      // Option name
+                        array( $this, 'sanitize' ) // Callback
+                );
+
+                register_setting(
+                        'meetup_settings', // Option group
+                        $meetup_option_name,      // Option name
                         array( $this, 'sanitize' ) // Callback
                 );
                 
@@ -88,9 +100,9 @@ class EDUPluginAdmin
                         array(
                                 'label_for'   => 'userInput',
                                 'name'        => 'user',
-                                'value'       => esc_attr( $data['user'] ),
-                                'option_name' => $option_name,
-                                'option_values' => $option_values
+                                'value'       => esc_attr( $github_data['user'] ),
+                                'option_name' => $github_option_name,
+                                'option_values' => $github_option_values
                         )
                 );
                 add_settings_field(
@@ -102,8 +114,8 @@ class EDUPluginAdmin
                         array(
                                 'label_for'   => 'tokenInput',
                                 'name'        => 'token',
-                                'value'       => esc_attr( $data['token'] ),
-                                'option_name' => $option_name
+                                'value'       => esc_attr( $github_data['token'] ),
+                                'option_name' => $github_option_name
                         )
                 );
                 
@@ -124,8 +136,8 @@ class EDUPluginAdmin
                         array(
                                 'label_for'   => 'ownerInput',
                                 'name'        => 'readme_owner',
-                                'value'       => esc_attr( $data['readme_owner'] ),
-                                'option_name' => $option_name
+                                'value'       => esc_attr( $github_data['readme_owner'] ),
+                                'option_name' => $github_option_name
                         )
                 );
                 add_settings_field(
@@ -137,8 +149,8 @@ class EDUPluginAdmin
                         array(
                                 'label_for'   => 'repoInput',
                                 'name'        => 'readme_repo',
-                                'value'       => esc_attr( $data['readme_repo'] ),
-                                'option_name' => $option_name
+                                'value'       => esc_attr( $github_data['readme_repo'] ),
+                                'option_name' => $github_option_name
                         )
                 );
                 add_settings_field(
@@ -150,8 +162,43 @@ class EDUPluginAdmin
                         array(
                                 'label_for'   => 'pagesInput',
                                 'name'        => 'page_ids',
-                                'value'       => esc_attr( $data['page_ids'] ),
-                                'option_name' => $option_name
+                                'value'       => esc_attr( $github_data['page_ids'] ),
+                                'option_name' => $github_option_name
+                        )
+                );
+
+                // Meetup Settings
+                $print_meetup_auth = new PrintSection('Authorization');
+                add_settings_section(
+                        'meetup_settings_section',
+                        'Meetup Settings',
+                        array( $print_meetup_auth, 'print_section_info' ),
+                        'EDUPlugin-settings'
+                );
+                add_settings_field(
+                        'meetup_key',
+                        'API Key',
+                        array( $this, 'input_callback' ),
+                        'EDUPlugin-settings',
+                        'meetup_settings_section',
+                        array(
+                                'label_for'   => 'meetupKeyInput',
+                                'name'        => 'key',
+                                'value'       => esc_attr( $meetup_data['key'] ),
+                                'option_name' => $meetup_option_name
+                        )
+                );
+                add_settings_field(
+                        'meetup_groups',
+                        'Groups',
+                        array( $this, 'input_callback' ),
+                        'EDUPlugin-settings',
+                        'meetup_settings_section',
+                        array(
+                                'label_for'   => 'meetupGroupsInput',
+                                'name'        => 'groups',
+                                'value'       => esc_attr( $meetup_data['groups'] ),
+                                'option_name' => $meetup_option_name
                         )
                 );
         }
@@ -172,16 +219,16 @@ class EDUPluginAdmin
                 );
         }
 
-	/**
-	 * Callback to add the links on the plugin page.
-	 * (Next to Activate/Deactivate, Edit, ...)
-	 */
-	function EDUPlugin_action_links ( $links ) {
-		$links[] = '<a href="'. 
-			   esc_url( get_admin_url(null, 'options-general.php?page=EDUPlugin-settings') ) .
-			   '">Settings</a>';
-		return $links;
-	}
+        /**
+         * Callback to add the links on the plugin page.
+         * (Next to Activate/Deactivate, Edit, ...)
+         */
+        function EDUPlugin_action_links ( $links ) {
+                $links[] = '<a href="'. 
+                           esc_url( get_admin_url(null, 'options-general.php?page=EDUPlugin-settings') ) .
+                           '">Settings</a>';
+                return $links;
+        }
 
         /**
          * Sanitize the use inputs.

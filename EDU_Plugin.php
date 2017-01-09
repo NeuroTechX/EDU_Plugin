@@ -79,21 +79,26 @@ function run_EDUPlugin() {
          */
 
         // Github Options
-        $options = get_option('github');
-        $user = isset( $options['user'] ) ? $options['user'] : "";
-        $token = isset( $options['token'] ) ? $options['token'] : "";
+        $github_options = get_option('github');
+        $user = isset( $github_options['user'] ) ? $github_options['user'] : "";
+        $token = isset( $github_options['token'] ) ? $github_options['token'] : "";
         $gh = new Github( $user, $token );
         
         // GithubReadmePlugin
-        $owner = isset( $options['readme_owner'] ) ? $options['readme_owner'] : "";
-        $repo = isset( $options['readme_repo'] ) ? $options['readme_repo'] : "";
-        $page_ids = isset( $options['page_ids'] ) ? explode( ',', $options['page_ids'] ) : array();
+        $owner = isset( $github_options['readme_owner'] ) ? $github_options['readme_owner'] : "";
+        $repo = isset( $github_options['readme_repo'] ) ? $github_options['readme_repo'] : "";
+        $page_ids = isset( $github_options['page_ids'] ) ? explode( ',', $github_options['page_ids'] ) : array();
         foreach( $page_ids as $id ) {
                 $id = intval( trim($id) );
         }
         $ghplugin = new GithubReadmePlugin( $gh, $owner, $repo, $page_ids, "html" );
         $EDUPlugin->add_filter( 'the_content',
                                 array( $ghplugin, 'callback_github_readme' ) );
+
+        // MeetupEventPlugin Options
+        $meetup_options = get_option('meetup');
+        $key = isset( $meetup_options['key'] ) ? $meetup_options['key'] : "";
+        $groups = isset( $meetup_options['groups'] ) ? $meetup_options['groups'] : "";
 
         // EDUPluginAdmin
         $adminplugin = new EDUPluginAdmin();

@@ -138,6 +138,46 @@ class Github
 
 
 /**
+ * Wrapper class for Meetup's API specific requests.
+ */
+class Meetup
+{
+        static $url = 'https://api.meetup.com';
+
+        /**
+         * @key         API Key
+         */
+        function __construct( $key ) {
+                $this->key = $key;
+                $this->sign = 'true';
+                $this->params = array(
+                        "key=$this->key",
+                        "sign=$this->sign"
+                );
+        }
+
+        /**
+         * Return an assoc array representation of the json from Meetup's API.
+         *
+         * @group       Meetup group to get event from
+         * @status      Status filter (defaults to "upcoming")
+         */
+        function get_events( $group, $status="" ) {
+                $endpoint = "/$group/events";
+                if ( $status == "upcoming" ||
+                     $status == "past" ||
+                     $status == "cancelled" ) {
+                        $endpoint .= "?status=$status";
+                }
+                $request_url = Meetup::$url . $endpoint;
+                $r = HttpRequest::get( $request_url )['content'];
+                $json = json_decode( $r, true );
+                return $json;
+        }
+}
+
+
+/**
  * Various utility functions for HTML processing.
  */
 class HTMLUtils
