@@ -35,10 +35,12 @@ class MeetupEventPlugin
                                 $link = $event['link'];
                                 $title = $event['name'];
                                 $description = $event['description'];
+                                $group = $event['group']['name'];
 
                                 $h3 = $dom->createElement( 'h3' , htmlentities( $title ) );
                                 $ul = $dom->createElement( 'ul' );
-                                $span = $dom->createElement( 'span', $datetime );
+                                $span1 = $dom->createElement( 'span', $datetime );
+                                $span2 = $dom->createElement( 'span', 'Hosted by ' . $group );
 
                                 $a = $dom->createElement( 'a' , 'Meetup Link');
                                 $a->setAttribute( 'href', $link );
@@ -47,11 +49,14 @@ class MeetupEventPlugin
                                 $p = $dom->createElement( 'p' , $description );
 
                                 $li_1 = $dom->createElement( 'li' );
-                                $li_1->appendChild( $span );
+                                $li_1->appendChild( $span1 );
                                 $li_2 = $dom->createElement( 'li' );
                                 $li_2->appendChild( $a );
+                                $li_3 = $dom->createElement( 'li' );
+                                $li_3->appendChild( $span2 );
                                 $ul->appendChild( $li_1 );
                                 $ul->appendChild( $li_2 );
+                                $ul->appendChild( $li_3 );
 
                                 $dom->appendChild( $p );
                                 $dom->appendChild( $h3 );
