@@ -67,7 +67,8 @@ class EDUPluginAdmin
                 $meetup_option_values = get_option( $meetup_option_name );
                 $meetup_default_values = array (
                         'key' => '',
-                        'groups'  => ''
+                        'groups'  => '',
+                        'page_ids' => ''
                 );
                 $meetup_data = shortcode_atts( $meetup_default_values, $meetup_option_values );
 
@@ -198,6 +199,19 @@ class EDUPluginAdmin
                                 'label_for'   => 'meetupGroupsInput',
                                 'name'        => 'groups',
                                 'value'       => esc_attr( $meetup_data['groups'] ),
+                                'option_name' => $meetup_option_name
+                        )
+                );
+                add_settings_field(
+                        'meetup_event_pages',
+                        'Page ID(s)',
+                        array( $this, 'input_callback' ),
+                        'EDUPlugin-settings',
+                        'meetup_settings_section',
+                        array(
+                                'label_for'   => 'pagesInput',
+                                'name'        => 'page_ids',
+                                'value'       => esc_attr( $meetup_data['page_ids'] ),
                                 'option_name' => $meetup_option_name
                         )
                 );

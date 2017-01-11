@@ -78,27 +78,43 @@ function run_EDUPlugin() {
          * Set up the plugins and load the hooks.
          */
 
-        // Github Options
+        // Github options
         $github_options = get_option('github');
         $user = isset( $github_options['user'] ) ? $github_options['user'] : "";
         $token = isset( $github_options['token'] ) ? $github_options['token'] : "";
-        $gh = new Github( $user, $token );
-        
-        // GithubReadmePlugin
         $owner = isset( $github_options['readme_owner'] ) ? $github_options['readme_owner'] : "";
         $repo = isset( $github_options['readme_repo'] ) ? $github_options['readme_repo'] : "";
-        $page_ids = isset( $github_options['page_ids'] ) ? explode( ',', $github_options['page_ids'] ) : array();
-        foreach( $page_ids as $id ) {
+        $github_page_ids = isset( $github_options['page_ids'] ) ?
+                           explode( ',', $github_options['page_ids'] ) : array();
+        foreach( $github_page_ids as $id ) {
                 $id = intval( trim($id) );
         }
-        $ghplugin = new GithubReadmePlugin( $gh, $owner, $repo, $page_ids, "html" );
+        
+        // GithubReadmePlugin
+        $gh = new Github( $user, $token );
+        $ghplugin = new GithubReadmePlugin( $gh, $owner, $repo, $github_page_ids, "html" );
         $EDUPlugin->add_filter( 'the_content',
                                 array( $ghplugin, 'callback_github_readme' ) );
 
-        // MeetupEventPlugin Options
+        // Meetup options
         $meetup_options = get_option('meetup');
         $key = isset( $meetup_options['key'] ) ? $meetup_options['key'] : "";
-        $groups = isset( $meetup_options['groups'] ) ? $meetup_options['groups'] : "";
+        $groups = isset( $meetup_options['groups'] ) ?
+                  explode( ',', $meetup_options['groups'] ) : array();
+        foreach( $groups as $group ) {
+                $group = trim($group);
+        }
+        $meetup_page_ids = isset( $meetup_options['page_ids'] ) ?
+                           explode( ',', $meetup_options['page_ids'] ) : array();
+        foreach( $meetup_page_ids as $id ) {
+                $id = intval( trim($id) );
+        }
+
+        // MeetupEventPlugin
+        $mu = new Meetup( '36a2b15417c636034647713a656d64' );
+        $muplugin = new MeetupEventPlugin( $mu, $meetup_page_ids, $groups );
+        $EDUPlugin->add_filter( 'the_content',
+                                array( $muplugin, 'callback_meetup_event' ) );
 
         // EDUPluginAdmin
         $adminplugin = new EDUPluginAdmin();

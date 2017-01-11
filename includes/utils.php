@@ -162,12 +162,17 @@ class Meetup
          * @group       Meetup group to get event from
          * @status      Status filter (defaults to "upcoming")
          */
-        function get_events( $group, $status="" ) {
+        function get_events( $group, $status="upcoming" ) {
                 $endpoint = "/$group/events";
                 if ( $status == "upcoming" ||
                      $status == "past" ||
                      $status == "cancelled" ) {
                         $endpoint .= "?status=$status";
+                } else {
+                        $endpoint .= "?status=upcoming";
+                }
+                foreach ( $this->params as $key => $value ) {
+                        $endpoint .= "&$key=$value";
                 }
                 $request_url = Meetup::$url . $endpoint;
                 $r = HttpRequest::get( $request_url )['content'];
