@@ -100,6 +100,7 @@ function run_EDUPlugin() {
         $ghplugin = new GithubReadmePlugin( $gh, $owner, $repo, $github_page_ids, "html" );
         $EDUPlugin->add_filter( 'the_content',
                                 array( $ghplugin, 'callback_github_readme' ) );
+        add_shortcode( 'github_readme', array( $ghplugin, 'generate_shortcode' ) );
 
         // Meetup options
         $meetup_option_name = 'meetup';
@@ -110,8 +111,8 @@ function run_EDUPlugin() {
         foreach( $groups as $group ) {
                 $group = trim($group);
         }
-        $meetup_page_ids = isset( $EDUPlugin_options[$meetup_options]['page_ids'] ) ?
-                           explode( ',', $EDUPlugin_options[$meetup_options]['page_ids'] ) : array();
+        $meetup_page_ids = isset( $EDUPlugin_options[$meetup_option_name]['page_ids'] ) ?
+                           explode( ',', $EDUPlugin_options[$meetup_option_name]['page_ids'] ) : array();
         foreach( $meetup_page_ids as $id ) {
                 $id = intval( trim($id) );
         }
