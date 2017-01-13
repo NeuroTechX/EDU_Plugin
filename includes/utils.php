@@ -109,8 +109,15 @@ class Github
         function get_readme( $owner, $repo ) {
                 $endpoint = '/repos/' . $owner . '/' . $repo . '/readme';
                 $request_url = Github::$url . $endpoint;
-                $r = HttpRequest::get( $request_url, $this->headers )['content'];
-                $json = json_decode( $r, true );
+                $r = HttpRequest::get( $request_url, $this->headers );
+                if ( $r['status_code'] != 200 &&
+                     $r['status_code'] != 301 &&
+                     $r['status_code'] != 302 &&
+                     $r['status_code'] != 307 ) {
+                        return false;
+                }
+                $content = $r['content'];
+                $json = json_decode( $content, true );
                 return HttpRequest::get( $json['download_url'] )['content'];
         }
 
