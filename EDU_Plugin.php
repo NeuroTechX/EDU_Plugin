@@ -77,15 +77,20 @@ function run_EDUPlugin() {
         /*
          * Set up the plugins and load the hooks.
          */
+        $EDUPlugin_options = get_option( 'EDUPlugin' );
 
         // Github options
-        $github_options = get_option('github');
-        $user = isset( $github_options['user'] ) ? $github_options['user'] : "";
-        $token = isset( $github_options['token'] ) ? $github_options['token'] : "";
-        $owner = isset( $github_options['readme_owner'] ) ? $github_options['readme_owner'] : "";
-        $repo = isset( $github_options['readme_repo'] ) ? $github_options['readme_repo'] : "";
-        $github_page_ids = isset( $github_options['page_ids'] ) ?
-                           explode( ',', $github_options['page_ids'] ) : array();
+        $github_option_name = 'github';
+        $user = isset( $EDUPlugin_options[$github_option_name]['user'] ) ?
+                $EDUPlugin_options[$github_option_name]['user'] : "";
+        $token = isset( $EDUPlugin_options[$github_option_name]['token'] ) ?
+                 $EDUPlugin_options[$github_option_name]['token'] : "";
+        $owner = isset( $EDUPlugin_options[$github_option_name]['readme_owner'] ) ?
+                 $EDUPlugin_options[$github_option_name]['readme_owner'] : "";
+        $repo = isset( $EDUPlugin_options[$github_option_name]['readme_repo'] ) ?
+                $EDUPlugin_options[$github_option_name]['readme_repo'] : "";
+        $github_page_ids = isset( $EDUPlugin_options[$github_option_name]['page_ids'] ) ?
+                           explode( ',', $EDUPlugin_options[$github_option_name]['page_ids'] ) : array();
         foreach( $github_page_ids as $id ) {
                 $id = intval( trim($id) );
         }
@@ -97,15 +102,16 @@ function run_EDUPlugin() {
                                 array( $ghplugin, 'callback_github_readme' ) );
 
         // Meetup options
-        $meetup_options = get_option('meetup');
-        $key = isset( $meetup_options['key'] ) ? $meetup_options['key'] : "";
-        $groups = isset( $meetup_options['groups'] ) ?
-                  explode( ',', $meetup_options['groups'] ) : array();
+        $meetup_option_name = 'meetup';
+        $key = isset( $EDUPlugin_options[$meetup_option_name]['key'] ) ?
+               $EDUPlugin_options[$meetup_option_name]['key'] : "";
+        $groups = isset( $EDUPlugin_options[$meetup_option_name]['groups'] ) ?
+                  explode( ',', $EDUPlugin_options[$meetup_option_name]['groups'] ) : array();
         foreach( $groups as $group ) {
                 $group = trim($group);
         }
-        $meetup_page_ids = isset( $meetup_options['page_ids'] ) ?
-                           explode( ',', $meetup_options['page_ids'] ) : array();
+        $meetup_page_ids = isset( $EDUPlugin_options[$meetup_options]['page_ids'] ) ?
+                           explode( ',', $EDUPlugin_options[$meetup_options]['page_ids'] ) : array();
         foreach( $meetup_page_ids as $id ) {
                 $id = intval( trim($id) );
         }
