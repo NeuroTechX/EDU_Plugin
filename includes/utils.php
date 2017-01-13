@@ -107,6 +107,10 @@ class Github
          * @repo        The repo's name
          */
         function get_readme( $owner, $repo ) {
+                // Cache
+                $key = $owner . ':' . $repo;
+                $group = 'github_readme';
+
                 $endpoint = '/repos/' . $owner . '/' . $repo . '/readme';
                 $request_url = Github::$url . $endpoint;
                 $r = HttpRequest::get( $request_url, $this->headers );
@@ -114,9 +118,11 @@ class Github
                      $r['status_code'] != 301 &&
                      $r['status_code'] != 302 &&
                      $r['status_code'] != 307 ) {
-                        return false;
+                        $readme = wp_cache_get( $key, $group );
+                        return $readme ? $readme : "";
                 }
                 $content = $r['content'];
+                wp_cache_set( $key, $content, $group );
                 $json = json_decode( $content, true );
                 return HttpRequest::get( $json['download_url'] )['content'];
         }
