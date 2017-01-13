@@ -115,6 +115,7 @@ function run_EDUPlugin() {
         $muplugin = new MeetupEventPlugin( $mu, $meetup_page_ids, $groups );
         $EDUPlugin->add_filter( 'the_content',
                                 array( $muplugin, 'callback_meetup_event' ) );
+        add_shortcode( 'meetup_events', array( $muplugin, 'generate_shortcode' ) );
 
         // EDUPluginAdmin
         $adminplugin = new EDUPluginAdmin();
