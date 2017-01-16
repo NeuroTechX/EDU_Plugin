@@ -183,6 +183,50 @@ class Meetup
 
 
 /**
+ * Wrapper class for Eventbrite's API specific requests.
+ */
+class Eventbrite
+{
+
+        static $url = 'https://www.eventbriteapi.com/v3';
+        
+        /**
+         * @tokens         Array of API tokens
+         */
+        function __construct( $token ) {
+                $this->token = $token;
+        }
+
+        /**
+         * TODO: GET /events/search/
+         */
+        function get_events( $organizer_id ) {
+                $endpoint = "/events/search";
+                $endpoint .= "?token=$this->token";
+                $endpoint .= "&organizer.id=$organizer_id";
+                $request_url = Eventbrite::$url . $endpoint;
+                $r = HttpRequest::get( $request_url )['content'];
+                $json = json_decode( $r, true );
+                $events = array_key_exists( 'events', $json ) ? $json['events'] : false;
+
+                return $events;
+        }
+
+        /**
+         * Return the organizer object of the given organizer's id
+         *
+         * @id          Organizer's id
+         *
+         */
+        function get_organizer( $id ) {
+                $endpoint = "/organizers/$id";
+                $r = HttpRequest::get( $request_url )['content'];
+                return $r;
+        }
+}
+
+
+/**
  * Various utility functions for HTML processing.
  */
 class HTMLUtils

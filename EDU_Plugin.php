@@ -104,8 +104,8 @@ function run_EDUPlugin() {
 
         // Meetup options
         $meetup_option_name = 'meetup';
-        $key = isset( $EDUPlugin_options[$meetup_option_name]['key'] ) ?
-               $EDUPlugin_options[$meetup_option_name]['key'] : "";
+        $meetup_key = isset( $EDUPlugin_options[$meetup_option_name]['key'] ) ?
+                      $EDUPlugin_options[$meetup_option_name]['key'] : "";
         $groups = isset( $EDUPlugin_options[$meetup_option_name]['groups'] ) ?
                   explode( ',', $EDUPlugin_options[$meetup_option_name]['groups'] ) : array();
         foreach( $groups as $group ) {
@@ -118,11 +118,33 @@ function run_EDUPlugin() {
         }
 
         // MeetupEventPlugin
-        $mu = new Meetup( '36a2b15417c636034647713a656d64' );
+        $mu = new Meetup( $meetup_key );
         $muplugin = new MeetupEventPlugin( $mu, $meetup_page_ids, $groups );
         $EDUPlugin->add_filter( 'the_content',
                                 array( $muplugin, 'callback_meetup_event' ) );
         add_shortcode( 'meetup_events', array( $muplugin, 'generate_shortcode' ) );
+
+        // Eventbrite options
+        $eventbrite_option_name = 'eventbrite';
+        $eventbrite_key = isset( $EDUPlugin_options[$eventbrite_option_name]['key'] ) ?
+                          $EDUPlugin_options[$eventbrite_option_name]['key'] : "";
+        $eventbrite_organizer_ids = isset( $EDUPlugin_options[$eventbrite_option_name]['organizer_ids'] ) ?
+                                    explode( ',', $EDUPlugin_options[$eventbrite_option_name]['organizer_ids'] ) : array();
+        foreach( $eventbrite_organizer_ids as $id ) {
+                $id = intval( trim($id) );
+        }
+        $eventbrite_page_ids = isset( $EDUPlugin_options[$eventbrite_option_name]['page_ids'] ) ?
+                               explode( ',', $EDUPlugin_options[$eventbrite_option_name]['page_ids'] ) : array();
+        foreach( $eventbrite_page_ids as $id ) {
+                $id = intval( trim($id) );
+        }
+        
+        // EventbriteEventPlugin
+        $eb = new Eventbrite( $eventbrite_key );
+        $ebplugin = new EventbriteEventPlugin( $eb, $eventbrite_organizer_ids, $eventbrite_page_ids );
+        $EDUPlugin->add_filter( 'the_content',
+                                array( $ebplugin, 'callback_eventbrite_event' ) );
+        add_shortcode( 'eventbrite_events', array( $ebplugin, 'generate_shortcode' ) );
 
         // EDUPluginAdmin
         $adminplugin = new EDUPluginAdmin();
