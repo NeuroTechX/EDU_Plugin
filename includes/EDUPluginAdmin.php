@@ -74,6 +74,15 @@ class EDUPluginAdmin
                 );
                 $meetup_data = shortcode_atts( $meetup_default_values, $meetup_option_values );
 
+                $eventbrite_option_name = 'eventbrite';
+                $eventbrite_option_values = $option_values[$eventbrite_option_name];
+                $eventbrite_default_values = array (
+                        'key' => '',
+                        'organizer_ids'  => '',
+                        'page_ids' => ''
+                );
+                $eventbrite_data = shortcode_atts( $eventbrite_default_values, $eventbrite_option_values );             
+
                 register_setting(
                         'eduplugin_settings', // Option group
                         $option_name,      // Option name
@@ -211,11 +220,62 @@ class EDUPluginAdmin
                         'EDUPlugin-settings',
                         'meetup_settings_section',
                         array(
-                                'label_for'   => 'pagesInput',
+                                'label_for'   => 'meetupPagesInput',
                                 'name'        => 'page_ids',
                                 'value'       => esc_attr( $meetup_data['page_ids'] ),
                                 'option_name' => $option_name,
                                 'suboption_name' => $meetup_option_name
+                        )
+                );
+
+                // Meetup Settings
+                $print_eventbrite_auth = new PrintSection('Authorization');
+                add_settings_section(
+                        'eventbrite_settings_section',
+                        'Eventbrite Settings',
+                        array( $print_eventbrite_auth, 'print_section_info' ),
+                        'EDUPlugin-settings'
+                );
+                add_settings_field(
+                        'evenbrite_key',
+                        'Key',
+                        array( $this, 'input_callback' ),
+                        'EDUPlugin-settings',
+                        'eventbrite_settings_section',
+                        array(
+                                'label_for'   => 'eventbriteKeyInput',
+                                'name'        => 'key',
+                                'value'       => esc_attr( $eventbrite_data['key'] ),
+                                'option_name' => $option_name,
+                                'suboption_name' => $eventbrite_option_name
+                        )
+                );
+                add_settings_field(
+                        'eventbrite_organizer_ids',
+                        'Organizer ID(s)',
+                        array( $this, 'input_callback' ),
+                        'EDUPlugin-settings',
+                        'eventbrite_settings_section',
+                        array(
+                                'label_for'   => 'eventbriteOrganizersInput',
+                                'name'        => 'organizer_ids',
+                                'value'       => esc_attr( $eventbrite_data['organizer_ids'] ),
+                                'option_name' => $option_name,
+                                'suboption_name' => $eventbrite_option_name
+                        )
+                );
+                add_settings_field(
+                        'eventbrite_event_pages',
+                        'Page ID(s)',
+                        array( $this, 'input_callback' ),
+                        'EDUPlugin-settings',
+                        'eventbrite_settings_section',
+                        array(
+                                'label_for'   => 'eventbritePagesInput',
+                                'name'        => 'page_ids',
+                                'value'       => esc_attr( $eventbrite_data['page_ids'] ),
+                                'option_name' => $option_name,
+                                'suboption_name' => $eventbrite_option_name
                         )
                 );
         }
