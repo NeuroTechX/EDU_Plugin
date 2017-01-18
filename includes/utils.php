@@ -296,6 +296,49 @@ class HTMLUtils
                 }
                 return $doc->saveHTML();
         }
+
+        /**
+         * Return the html representation of an event (meetup, eventbrite, ...)
+         *
+         * @title               Title of the event
+         * @description         Description of the event
+         * @datetime            Date and time of the event (string)
+         * @organizer           Organizer of the event
+         * @link                Link to external event page (meetup, eventbrite, ...)
+         */
+        static function print_event_html( $title, $description, $datetime, $organizer, $link ) {
+                $dom = new DOMDocument();
+                // Title
+                $h3 = $dom->createElement( 'h3' , htmlentities( $title ) );
+                // Date
+                $span1 = $dom->createElement( 'span', $datetime );
+                $span2 = $dom->createElement( 'span', 'Hosted by ' . $group );
+
+                // External link
+                $a = $dom->createElement( 'a' , 'Meetup Link');
+                $a->setAttribute( 'href', $link );
+                $a->setAttribute( 'target', '_blank' );
+
+                // Description
+                $p = $dom->createElement( 'p' , $description );
+
+                $ul = $dom->createElement( 'ul' );
+                $li_1 = $dom->createElement( 'li' );
+                $li_1->appendChild( $span1 );
+                $li_2 = $dom->createElement( 'li' );
+                $li_2->appendChild( $a );
+                $li_3 = $dom->createElement( 'li' );
+                $li_3->appendChild( $span2 );
+                $ul->appendChild( $li_1 );
+                $ul->appendChild( $li_2 );
+                $ul->appendChild( $li_3 );
+                
+                $dom->appendChild( $h3 );
+                $dom->appendChild( $ul );
+                $dom->appendChild( $p );
+
+                return $dom->saveHTML();
+        }
 }
 
 

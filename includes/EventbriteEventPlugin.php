@@ -21,7 +21,7 @@ class EventbriteEventPlugin
          */
         function generate_html( $data ) {
                 $dom = new DOMDocument();
-                $h1 = $dom->createElement( 'h1', "Upcoming Events" );
+                $h1 = $dom->createElement( 'h1', "Upcoming Eventbrite Events" );
                 $dom->appendChild( $h1 );
                 foreach ( $data as $i => $event ) {
                         $epoch = strtotime($event['start']['utc']);
@@ -31,30 +31,13 @@ class EventbriteEventPlugin
                         $description = $event['description']['text'];
                         $organizer = $event['organizer.name'];
 
-                        $h3 = $dom->createElement( 'h3' , htmlentities( $title ) );
-                        $ul = $dom->createElement( 'ul' );
-                        $span1 = $dom->createElement( 'span', $datetime );
-                        $span2 = $dom->createElement( 'span', 'Hosted by ' . $organizer );
+                        $div = $dom->createElement('div');
 
-                        $a = $dom->createElement( 'a' , 'Eventbrite Link');
-                        $a->setAttribute( 'href', $link );
-                        $a->setAttribute( 'target', '_blank' );
-
-                        $p = $dom->createElement( 'p' , $description );
-
-                        $li_1 = $dom->createElement( 'li' );
-                        $li_1->appendChild( $span1 );
-                        $li_2 = $dom->createElement( 'li' );
-                        $li_2->appendChild( $a );
-                        $li_3 = $dom->createElement( 'li' );
-                        $li_3->appendChild( $span2 );
-                        $ul->appendChild( $li_1 );
-                        $ul->appendChild( $li_2 );
-                        $ul->appendChild( $li_3 );
-
-                        $dom->appendChild( $p );
-                        $dom->appendChild( $h3 );
-                        $dom->appendChild( $ul );
+                        $fragment = $dom->createDocumentFragment();
+                        $fragment->appendXML(
+                                HTMLUtils::print_event_html( $title, $description, $datetime, $organizer, $link )
+                        );
+                        $dom->appendChild( $fragment );
                 }
                 return $dom->saveHTML();
         }
