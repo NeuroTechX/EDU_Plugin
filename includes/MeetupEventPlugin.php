@@ -22,6 +22,7 @@ class MeetupEventPlugin
                 $dom = new DOMDocument();
                 $h1 = $dom->createElement( 'h1', "Upcoming Meetup Events" );
                 $dom->appendChild( $h1 );
+                $content = '';
                 foreach ( $data as $i => $event ) {
                         $epoch = $event['time'] / 1000;
                         $datetime = date("j M, Y, g:i A - T", $epoch);
@@ -32,13 +33,9 @@ class MeetupEventPlugin
 
                         $div = $dom->createElement('div');
 
-                        $fragment = $dom->createDocumentFragment();
-                        $fragment->appendXML(
-                                HTMLUtils::print_event_html( $title, $description, $datetime, $group, $link )
-                        );
-                        $dom->appendChild( $fragment );
+                        $content .= HTMLUtils::print_event_html( $title, $description, $datetime, $group, $link );
                 }
-                return $dom->saveHTML();
+                return $dom->saveHTML() . $content;
         }
 
         function generate_shortcode( $atts ) {

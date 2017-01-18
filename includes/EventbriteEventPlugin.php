@@ -23,6 +23,7 @@ class EventbriteEventPlugin
                 $dom = new DOMDocument();
                 $h1 = $dom->createElement( 'h1', "Upcoming Eventbrite Events" );
                 $dom->appendChild( $h1 );
+                $content = '';
                 foreach ( $data as $i => $event ) {
                         $epoch = strtotime($event['start']['utc']);
                         $datetime = date("j M, Y, g:i A - T", $epoch);
@@ -33,13 +34,9 @@ class EventbriteEventPlugin
 
                         $div = $dom->createElement('div');
 
-                        $fragment = $dom->createDocumentFragment();
-                        $fragment->appendXML(
-                                HTMLUtils::print_event_html( $title, $description, $datetime, $organizer, $link )
-                        );
-                        $dom->appendChild( $fragment );
+                        $content .= HTMLUtils::print_event_html( $title, $description, $datetime, $organizer, $link );
                 }
-                return $dom->saveHTML();
+                return $dom->saveHTML() . $content;
         }
 
         function generate_shortcode( $atts ) {
