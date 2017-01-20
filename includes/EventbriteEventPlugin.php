@@ -20,11 +20,11 @@ class EventbriteEventPlugin
          * @data        Array of meetup events objects
          * @atts        Array of attributes set by shortcodes
          */
-        function generate_html( $data, $atts ) {
+        function generate_html( $data, $atts=array() ) {
                 $dom = new DOMDocument();
                 $h1 = $dom->createElement( 'h1', "Upcoming Eventbrite Events" );
                 $dom->appendChild( $h1 );
-                $content = '';
+                $class = isset( $atts['class'] ) ? $atts['class'] : '';
                 foreach ( $data as $i => $event ) {
                         $epoch = strtotime($event['start']['utc']);
                         $datetime = date("j M, Y, g:i A - T", $epoch);
@@ -33,10 +33,11 @@ class EventbriteEventPlugin
                         $description = $event['description']['text'];
                         $organizer = $event['organizer.name'];
 
-                        $class = isset( $atts['class'] ) ? $atts['class'] : '';
-                        $content .= HTMLUtils::print_event_html( $title, $description, $datetime, $organizer, $link, $class );
+                        $content = HTMLUtils::event_domdoc( $title, $description, $datetime, $organizer, $link, 'eventbrite-event-item' );
+                        HTMLUtils::append( $dom, $content );
                 }
-                return $dom->saveHTML() . $content;
+                HTMLUtils::div_wrap( $dom, $class );
+                return $dom->saveHTML();
         }
 
         /**

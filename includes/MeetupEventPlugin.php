@@ -6,7 +6,7 @@ class MeetupEventPlugin
         /**
          * @mu          Meetup object (see utils.php)
          * @post_ids    Posts' ids to apply the plugin on
-	 * @groups	Array of Meetup groups (strings)
+         * @groups      Array of Meetup groups (strings)
          */
         function __construct( $mu, $post_ids, $groups ) {
                 $this->mu = $mu;
@@ -18,13 +18,13 @@ class MeetupEventPlugin
          * Generate the output as html
          *
          * @data:       Array of meetup events objects
-	 * @atts	Array of attributes set by shortcodes
+         * @atts        Array of attributes set by shortcodes
          */
-        function generate_html( $data, $atts ) {
+        function generate_html( $data, $atts=array() ) {
                 $dom = new DOMDocument();
                 $h1 = $dom->createElement( 'h1', "Upcoming Meetup Events" );
                 $dom->appendChild( $h1 );
-                $content = '';
+                $class = isset( $atts['class'] ) ? $atts['class'] : '';
                 foreach ( $data as $i => $event ) {
                         $epoch = $event['time'] / 1000;
                         $datetime = date("j M, Y, g:i A - T", $epoch);
@@ -33,10 +33,11 @@ class MeetupEventPlugin
                         $description = $event['description'];
                         $group = $event['group']['name'];
 
-                        $class = isset( $atts['class'] ) ? $atts['class'] : '';
-                        $content .= HTMLUtils::print_event_html( $title, $description, $datetime, $group, $link, $class );
+                        $content = HTMLUtils::event_domdoc( $title, $description, $datetime, $group, $link, 'meetup-event-item' );
+                        HTMLUtils::append( $dom, $content );
                 }
-                return $dom->saveHTML() . $content;
+                HTMLUtils::div_wrap( $dom, $class );
+                return $dom->saveHTML();
         }
 
         /**

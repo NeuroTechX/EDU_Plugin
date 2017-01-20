@@ -298,7 +298,7 @@ class HTMLUtils
         }
 
         /**
-         * Return the html representation of an event (meetup, eventbrite, ...)
+         * Return the DOMDocument representation of an event (meetup, eventbrite, ...)
          *
          * @title               Title of the event
          * @description         Description of the event
@@ -306,16 +306,13 @@ class HTMLUtils
          * @organizer           Organizer of the event (for Meetup, we use groups...)
          * @link                Link to external event page (meetup, eventbrite, ...)
          */
-        static function print_event_html( $title, $description, $datetime, $organizer, $link, $class="" ) {
+        static function event_domdoc( $title, $description, $datetime, $organizer, $link, $class="" ) {
                 $dom = new DOMDocument();
-                // Wrapper
-                $div = $dom->createElement( 'div' );
-                $div->setAttribute( 'class', $class );
                 // Title
                 $h3 = $dom->createElement( 'h3', htmlentities( $title ) );
                 // Date
                 $span1 = $dom->createElement( 'span', $datetime );
-                $span2 = $dom->createElement( 'span', 'Hosted by ' . $group );
+                $span2 = $dom->createElement( 'span', 'Hosted by ' . $organizer );
 
                 // External link
                 $a = $dom->createElement( 'a' , 'Meetup Link');
@@ -336,12 +333,43 @@ class HTMLUtils
                 $ul->appendChild( $li_2 );
                 $ul->appendChild( $li_3 );
                 
-                $div->appendChild( $h3 );
-                $div->appendChild( $ul );
-                $div->appendChild( $p );
-                $dom->appendChild( $div );
+                $dom->appendChild( $h3 );
+                $dom->appendChild( $ul );
+                $dom->appendChild( $p );
 
-                return $dom->saveHTML();
+                if ( !empty ( $class ) ) {
+                        HTMLUtils::div_wrap( $dom, $class );
+                }
+                return $dom;
+        }
+
+        /**
+         * Wraps the given DOMDocument in a div
+         */
+        static function div_wrap( $dom, $class="" ) {
+                $div = $dom->createElement( 'div' );
+                if ( !empty( $class ) ) {
+                        $div->setAttribute( 'class', $class );
+                }
+                while ( $dom->childNodes->length > 0 ) {
+                        $child = $dom->childNodes->item(0);
+                        $dom->removeChild( $child );
+                        $div->appendChild( $child );
+                }
+                $dom->appendChild( $div );
+        }
+
+        /**
+         * Append DOMDocument $doc2 to DOMDocument $dom1
+         *
+         * @dom1        Dest DOMDocument
+         * @dom2        Src DOMDocument
+         */
+        static function append( $dom1, $dom2 ) {
+                foreach ( $dom2->childNodes as $child ) {
+                        $node = $dom1->importNode( $child, true );
+                        $dom1->appendChild( $node );
+                }
         }
 }
 

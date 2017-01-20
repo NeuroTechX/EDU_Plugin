@@ -27,7 +27,7 @@ class GithubReadmePlugin
          * @data:       The markdown formatted readme
          *
          */
-        function generate_html( $data ) {
+        function generate_html( $data, $atts=array() ) {
                 $Parsedown = new Parsedown();
                 $Parsedown->setMarkupEscaped( true );
                 $html = $Parsedown->text( $data );
@@ -48,12 +48,14 @@ class GithubReadmePlugin
                 $content .= HTMLUtils::add_target_blank_to_links(
                         HTMLUtils::add_anchors_to_headings( $html )
                 );
+                $class = isset( $atts['class'] ) ? '<div class="' . $atts['class'] . '">' : '<div>';
+                $content = $class . $content . '</div>';
                 return $content;
         }
 
         function generate_shortcode( $atts ) {
                 $r = $this->gh->get_readme( $this->owner, $this->repo );
-                return $this->generate_html( $r );
+                return $this->generate_html( $r, $atts );
         }
 
         /**
