@@ -303,7 +303,7 @@ class HTMLUtils
          * @title               Title of the event
          * @description         Description of the event
          * @datetime            Date and time of the event (string)
-         * @organizer           Organizer of the event
+         * @organizer           Organizer of the event (for Meetup, we use groups...)
          * @link                Link to external event page (meetup, eventbrite, ...)
          */
         static function print_event_html( $title, $description, $datetime, $organizer, $link, $class="" ) {

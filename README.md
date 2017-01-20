@@ -78,6 +78,32 @@ The parameters that must be set from the settings page are:
 - Repo name
 - A list of comma separated page ids on which to apply the plugin
 
+It is also possible to add the content to a post using the following shortcode: [github_readme]
+
+### MeetupEventPlugin
+
+The MeetupEventPlugin set the content of a post (post or page) to a list of Meetup events.
+
+The parameters that must be set from the settings page are:
+- API key
+- Event groups
+- A list of comma separated page ids on which to apply the plugin
+
+It is also possible to add the content to a post using the following shortcode: [meetup_events class="foo"]
+where class will set the class of the div that wraps each items of the list of events.
+
+### EventbriteEventPlugin
+
+The EventbriteEventPlugin set the content of a post (post or page) to a list of Eventbrite events.
+
+The parameters that must be set from the settings page are:
+- API key
+- A list of comma separated organizer ids to get the events from
+- A list of comma separated page ids on which to apply the plugin
+
+It is also possible to add the content to a post using the following shortcode: [eventbrite_events class="foo"]
+where class will set the class of the div that wraps each items of the list of events.
+
 
 # Resources
 Some useful resources to write plugins:

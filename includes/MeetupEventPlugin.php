@@ -5,6 +5,8 @@ class MeetupEventPlugin
         
         /**
          * @mu          Meetup object (see utils.php)
+         * @post_ids    Posts' ids to apply the plugin on
+	 * @groups	Array of Meetup groups (strings)
          */
         function __construct( $mu, $post_ids, $groups ) {
                 $this->mu = $mu;
@@ -16,7 +18,7 @@ class MeetupEventPlugin
          * Generate the output as html
          *
          * @data:       Array of meetup events objects
-         *
+	 * @atts	Array of attributes set by shortcodes
          */
         function generate_html( $data, $atts ) {
                 $dom = new DOMDocument();
@@ -37,6 +39,11 @@ class MeetupEventPlugin
                 return $dom->saveHTML() . $content;
         }
 
+        /**
+         * Generate the shortcodes' output
+         *
+         * @atts        Array of attributes set by shortcodes
+         */
         function generate_shortcode( $atts ) {
                 $events = array();
                 $a = shortcode_atts(

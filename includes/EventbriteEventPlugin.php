@@ -4,8 +4,9 @@ class EventbriteEventPlugin
 {
 
         /**
-         * @eb          Eventbrite object (see utils.php)
-         * @post_ids    Posts' ids to apply the plugin on
+         * @eb                  Eventbrite object (see utils.php)
+         * @post_ids            Posts' ids to apply the plugin on
+         * @organizer_ids       Array of Eventbrite organizers ids (strings)
          */
         function __construct( $eb, $organizer_ids, $post_ids ) {
                 $this->eb = $eb;
@@ -16,8 +17,8 @@ class EventbriteEventPlugin
         /**
          * Generate the output as html
          *
-         * @data:       Array of meetup events objects
-         *
+         * @data        Array of meetup events objects
+         * @atts        Array of attributes set by shortcodes
          */
         function generate_html( $data, $atts ) {
                 $dom = new DOMDocument();
@@ -38,9 +39,14 @@ class EventbriteEventPlugin
                 return $dom->saveHTML() . $content;
         }
 
+        /**
+         * Generate the shortcodes' output
+         *
+         * @atts        Array of attributes set by shortcodes
+         */
         function generate_shortcode( $atts ) {
                 $events = array();
-		$a = shortcode_atts(
+                $a = shortcode_atts(
                         array(
                                 'class' => ''
                         ),
