@@ -306,10 +306,13 @@ class HTMLUtils
          * @organizer           Organizer of the event
          * @link                Link to external event page (meetup, eventbrite, ...)
          */
-        static function print_event_html( $title, $description, $datetime, $organizer, $link ) {
+        static function print_event_html( $title, $description, $datetime, $organizer, $link, $class="" ) {
                 $dom = new DOMDocument();
+                // Wrapper
+                $div = $dom->createElement( 'div' );
+                $div->setAttribute( 'class', $class );
                 // Title
-                $h3 = $dom->createElement( 'h3' , htmlentities( $title ) );
+                $h3 = $dom->createElement( 'h3', htmlentities( $title ) );
                 // Date
                 $span1 = $dom->createElement( 'span', $datetime );
                 $span2 = $dom->createElement( 'span', 'Hosted by ' . $group );
@@ -333,9 +336,10 @@ class HTMLUtils
                 $ul->appendChild( $li_2 );
                 $ul->appendChild( $li_3 );
                 
-                $dom->appendChild( $h3 );
-                $dom->appendChild( $ul );
-                $dom->appendChild( $p );
+                $div->appendChild( $h3 );
+                $div->appendChild( $ul );
+                $div->appendChild( $p );
+                $dom->appendChild( $div );
 
                 return $dom->saveHTML();
         }

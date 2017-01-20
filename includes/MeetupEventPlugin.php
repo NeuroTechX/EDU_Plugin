@@ -18,7 +18,7 @@ class MeetupEventPlugin
          * @data:       Array of meetup events objects
          *
          */
-        function generate_html( $data ) {
+        function generate_html( $data, $atts ) {
                 $dom = new DOMDocument();
                 $h1 = $dom->createElement( 'h1', "Upcoming Meetup Events" );
                 $dom->appendChild( $h1 );
@@ -31,15 +31,20 @@ class MeetupEventPlugin
                         $description = $event['description'];
                         $group = $event['group']['name'];
 
-                        $div = $dom->createElement('div');
-
-                        $content .= HTMLUtils::print_event_html( $title, $description, $datetime, $group, $link );
+                        $class = isset( $atts['class'] ) ? $atts['class'] : '';
+                        $content .= HTMLUtils::print_event_html( $title, $description, $datetime, $group, $link, $class );
                 }
                 return $dom->saveHTML() . $content;
         }
 
         function generate_shortcode( $atts ) {
                 $events = array();
+                $a = shortcode_atts(
+                        array(
+                                'class' => ''
+                        ),
+                        $atts
+                );
                 foreach ( $this->groups as $group ) {
                         $r = $this->mu->get_events( $group );
                         $events = array_merge( $events, $r );
@@ -50,7 +55,7 @@ class MeetupEventPlugin
                         }
                         return ( $a['time'] < $b['time'] ) ? -1 : 1;
                 } );
-                return $this->generate_html( $events );
+                return $this->generate_html( $events, $atts );
         }
 
         function callback_meetup_event( $content ) {

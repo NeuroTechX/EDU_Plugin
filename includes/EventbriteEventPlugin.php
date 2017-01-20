@@ -19,7 +19,7 @@ class EventbriteEventPlugin
          * @data:       Array of meetup events objects
          *
          */
-        function generate_html( $data ) {
+        function generate_html( $data, $atts ) {
                 $dom = new DOMDocument();
                 $h1 = $dom->createElement( 'h1', "Upcoming Eventbrite Events" );
                 $dom->appendChild( $h1 );
@@ -32,15 +32,20 @@ class EventbriteEventPlugin
                         $description = $event['description']['text'];
                         $organizer = $event['organizer.name'];
 
-                        $div = $dom->createElement('div');
-
-                        $content .= HTMLUtils::print_event_html( $title, $description, $datetime, $organizer, $link );
+                        $class = isset( $atts['class'] ) ? $atts['class'] : '';
+                        $content .= HTMLUtils::print_event_html( $title, $description, $datetime, $organizer, $link, $class );
                 }
                 return $dom->saveHTML() . $content;
         }
 
         function generate_shortcode( $atts ) {
                 $events = array();
+		$a = shortcode_atts(
+                        array(
+                                'class' => ''
+                        ),
+                        $atts
+                );
                 foreach ( $this->organizer_ids as $id ) {
                         $organizer_name = $this->eb->get_organizer( $id )['name'];
                         $r = $this->eb->get_events( $id );
@@ -52,7 +57,7 @@ class EventbriteEventPlugin
                         }
                 }
                 // TODO: sort
-                return $this->generate_html( $events );
+                return $this->generate_html( $events, $atts );
         }
 
         function callback_eventbrite_event( $content ) {
