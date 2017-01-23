@@ -303,38 +303,51 @@ class HTMLUtils
          * @title               Title of the event
          * @description         Description of the event
          * @datetime            Date and time of the event (string)
+         *                      "j,M,Y,g:i A,T"  (day,month,year,time,timezone)
          * @organizer           Organizer of the event (for Meetup, we use groups...)
          * @link                Link to external event page (meetup, eventbrite, ...)
          */
         static function event_domdoc( $title, $description, $datetime, $organizer, $link, $class="" ) {
                 $dom = new DOMDocument();
-                // Title
-                $h3 = $dom->createElement( 'h3', htmlentities( $title ) );
-                // Date
-                $span1 = $dom->createElement( 'span', $datetime );
-                $span2 = $dom->createElement( 'span', 'Hosted by ' . $organizer );
+                // divs
+                $div_date = $dom->createElement( 'div' );
+                $div_date->setAttribute( 'class', 'date' );
+                $div_details = $dom->createElement( 'div' );
+                $div_details->setAttribute( 'class', 'details' );
 
-                // External link
-                $a = $dom->createElement( 'a' , 'Meetup Link');
+                // Date
+                $datetime_arr = explode( ',', $datetime );
+                $day_span = $dom->createElement( 'span', $datetime_arr[0] );
+                $day_span->setAttribute( 'class', 'day' );
+                $month_span = $dom->createElement( 'span', $datetime_arr[1] );
+                $month_span->setAttribute( 'class', 'month' );
+                $year_span = $dom->createElement( 'span', $datetime_arr[2] );
+                $year_span->setAttribute( 'class', 'year' );
+                $time_span = $dom->createElement( 'span', $datetime_arr[3] );
+                $time_span->setAttribute( 'class', 'time' );
+                $div_date->appendChild( $month_span );
+                $div_date->appendChild( $day_span );
+                $div_date->appendChild( $time_span );
+                $div_date->appendChild( $year_span );
+
+                // Details
+                // Title
+                $h3 = $dom->createElement( 'h3' );
+                $a = $dom->createElement( 'a' , htmlentities( $title ) );
                 $a->setAttribute( 'href', $link );
                 $a->setAttribute( 'target', '_blank' );
-
+                $h3->appendChild( $a );
+                // Organizer
+                $span_organizer = $dom->createElement( 'span', 'Organized by: ' . $organizer );
+                $div_details->appendChild( $h3 );
+                $div_details->appendChild( $span_organizer );
+                // TODO: location span
+                
                 // Description
                 $p = $dom->createElement( 'p' , $description );
 
-                $ul = $dom->createElement( 'ul' );
-                $li_1 = $dom->createElement( 'li' );
-                $li_1->appendChild( $span1 );
-                $li_2 = $dom->createElement( 'li' );
-                $li_2->appendChild( $a );
-                $li_3 = $dom->createElement( 'li' );
-                $li_3->appendChild( $span2 );
-                $ul->appendChild( $li_1 );
-                $ul->appendChild( $li_2 );
-                $ul->appendChild( $li_3 );
-                
-                $dom->appendChild( $h3 );
-                $dom->appendChild( $ul );
+                $dom->appendChild( $div_date );
+                $dom->appendChild( $div_details );
                 $dom->appendChild( $p );
 
                 if ( !empty ( $class ) ) {
