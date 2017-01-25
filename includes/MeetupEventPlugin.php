@@ -5,12 +5,10 @@ class MeetupEventPlugin
         
         /**
          * @mu          Meetup object (see utils.php)
-         * @post_ids    Posts' ids to apply the plugin on
          * @groups      Array of Meetup groups (strings)
          */
-        function __construct( $mu, $post_ids, $groups ) {
+        function __construct( $mu, $groups ) {
                 $this->mu = $mu;
-                $this->post_ids = $post_ids;
                 $this->groups = $groups;
         }
 
@@ -69,19 +67,17 @@ class MeetupEventPlugin
         function callback_meetup_event( $content ) {
                 $p = get_post();
                 $events = array();
-                if ( in_array( $p->ID, $this->post_ids ) )  {
-                        foreach ( $this->groups as $group ) {
-                                $r = $this->mu->get_events( $group );
-                                $events = array_merge( $events, $r );
-                        }
-                        usort($events, function( $a, $b ) {
-                                if ( $a['time'] == $b['time'] ) {
-                                        return 0;
-                                }
-                                return ( $a['time'] < $b['time'] ) ? -1 : 1;
-                        } );
-                        $content .= $this->generate_html( $events );
+                foreach ( $this->groups as $group ) {
+                        $r = $this->mu->get_events( $group );
+                        $events = array_merge( $events, $r );
                 }
+                usort($events, function( $a, $b ) {
+                        if ( $a['time'] == $b['time'] ) {
+                                return 0;
+                        }
+                        return ( $a['time'] < $b['time'] ) ? -1 : 1;
+                } );
+                $content .= $this->generate_html( $events );
                 return $content;
         }
 }

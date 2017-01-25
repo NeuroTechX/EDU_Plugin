@@ -89,17 +89,10 @@ function run_EDUPlugin() {
                  $EDUPlugin_options[$github_option_name]['readme_owner'] : "";
         $repo = isset( $EDUPlugin_options[$github_option_name]['readme_repo'] ) ?
                 $EDUPlugin_options[$github_option_name]['readme_repo'] : "";
-        $github_page_ids = isset( $EDUPlugin_options[$github_option_name]['page_ids'] ) ?
-                           explode( ',', $EDUPlugin_options[$github_option_name]['page_ids'] ) : array();
-        foreach( $github_page_ids as $id ) {
-                $id = intval( trim($id) );
-        }
         
         // GithubReadmePlugin
         $gh = new Github( $user, $token );
-        $ghplugin = new GithubReadmePlugin( $gh, $owner, $repo, $github_page_ids, "html" );
-        $EDUPlugin->add_filter( 'the_content',
-                                array( $ghplugin, 'callback_github_readme' ) );
+        $ghplugin = new GithubReadmePlugin( $gh, $owner, $repo, "html" );
         add_shortcode( 'github_readme', array( $ghplugin, 'generate_shortcode' ) );
 
         // Meetup options
@@ -111,17 +104,10 @@ function run_EDUPlugin() {
         foreach( $groups as $group ) {
                 $group = trim($group);
         }
-        $meetup_page_ids = isset( $EDUPlugin_options[$meetup_option_name]['page_ids'] ) ?
-                           explode( ',', $EDUPlugin_options[$meetup_option_name]['page_ids'] ) : array();
-        foreach( $meetup_page_ids as $id ) {
-                $id = intval( trim($id) );
-        }
 
         // MeetupEventPlugin
         $mu = new Meetup( $meetup_key );
-        $muplugin = new MeetupEventPlugin( $mu, $meetup_page_ids, $groups );
-        $EDUPlugin->add_filter( 'the_content',
-                                array( $muplugin, 'callback_meetup_event' ) );
+        $muplugin = new MeetupEventPlugin( $mu, $groups );
         add_shortcode( 'meetup_events', array( $muplugin, 'generate_shortcode' ) );
 
         // Eventbrite options
@@ -133,17 +119,10 @@ function run_EDUPlugin() {
         foreach( $eventbrite_organizer_ids as $id ) {
                 $id = intval( trim($id) );
         }
-        $eventbrite_page_ids = isset( $EDUPlugin_options[$eventbrite_option_name]['page_ids'] ) ?
-                               explode( ',', $EDUPlugin_options[$eventbrite_option_name]['page_ids'] ) : array();
-        foreach( $eventbrite_page_ids as $id ) {
-                $id = intval( trim($id) );
-        }
         
         // EventbriteEventPlugin
         $eb = new Eventbrite( $eventbrite_key );
-        $ebplugin = new EventbriteEventPlugin( $eb, $eventbrite_organizer_ids, $eventbrite_page_ids );
-        $EDUPlugin->add_filter( 'the_content',
-                                array( $ebplugin, 'callback_eventbrite_event' ) );
+        $ebplugin = new EventbriteEventPlugin( $eb, $eventbrite_organizer_ids );
         add_shortcode( 'eventbrite_events', array( $ebplugin, 'generate_shortcode' ) );
 
         // EDUPluginAdmin

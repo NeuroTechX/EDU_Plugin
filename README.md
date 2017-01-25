@@ -51,11 +51,17 @@ To load a plugin, instantiate an instance of that plugin in the *`run_EDUPlugin(
 
 Depending on the plugin's use case, call *`add_action`* or *`add_filter`* member method of the EDUPlugin instance, passing the hook, and an array containing an instance of the plugin and the name of the callback.
 
+For plugins involving generating content in a page or post, it is preferable and more flexible to use the shortcode api.
+In this case, instead of a callback function in the plugin class, we use a function to generate the desired output and use the add_shortcode() interface.
+See (https://codex.wordpress.org/Shortcode_API)[https://codex.wordpress.org/Shortcode_API]
+
 e.g. 
 ```php
 $ghplugin = new GithubReadmePlugin( $gh, $owner, $repo, $page_ids, "html" );
 $EDUPlugin->add_filter( 'the_content',
-                         array( $ghplugin, 'callback_github_readme' ) );
+                        array( $ghplugin, 'callback_github_readme' ) );
+add_shortcode( 'github_readme',
+               array( $ghplugin, 'generate_shortcode' ) );                       
 ```
 
 To add additional options to the plugin's admin page, add the settings' section and field in the
@@ -76,9 +82,9 @@ The parameters that must be set from the settings page are:
 - User token
 - Repo owner
 - Repo name
-- A list of comma separated page ids on which to apply the plugin
 
-It is also possible to add the content to a post using the following shortcode: [github_readme]
+To use the plugin, add the content to a post using the following shortcode: `[github_readme class="foo"]`
+where class will set the class of the div that wraps the content of the readme.
 
 ### MeetupEventPlugin
 
@@ -87,9 +93,8 @@ The MeetupEventPlugin set the content of a post (post or page) to a list of Meet
 The parameters that must be set from the settings page are:
 - API key
 - Event groups
-- A list of comma separated page ids on which to apply the plugin
 
-It is also possible to add the content to a post using the following shortcode: [meetup_events class="foo"]
+To use the plugin, add the content to a post using the following shortcode: `[meetup_events class="foo"]`
 where class will set the class of the div that wraps each items of the list of events.
 
 ### EventbriteEventPlugin
@@ -99,9 +104,8 @@ The EventbriteEventPlugin set the content of a post (post or page) to a list of 
 The parameters that must be set from the settings page are:
 - API key
 - A list of comma separated organizer ids to get the events from
-- A list of comma separated page ids on which to apply the plugin
 
-It is also possible to add the content to a post using the following shortcode: [eventbrite_events class="foo"]
+To use the plugin, add the content to a post using the following shortcode: `[eventbrite_events class="foo"]`
 where class will set the class of the div that wraps each items of the list of events.
 
 
@@ -110,6 +114,7 @@ Some useful resources to write plugins:
 - [Introduction to Plugin Development](https://developer.wordpress.org/plugins/intro/)
 - [Writing a Plugin](https://codex.wordpress.org/Writing_a_Plugin)
 - [Plugin API](https://codex.wordpress.org/Plugin_API)
+- [Shortcode API](https://codex.wordpress.org/Shortcode_API)
 - [Creating Option Pages](https://codex.wordpress.org/Creating_Options_Pages)
 - Useful references:
     - [Filter Reference](https://codex.wordpress.org/Plugin_API/Filter_Reference)

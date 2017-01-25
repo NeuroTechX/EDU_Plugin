@@ -5,12 +5,10 @@ class EventbriteEventPlugin
 
         /**
          * @eb                  Eventbrite object (see utils.php)
-         * @post_ids            Posts' ids to apply the plugin on
          * @organizer_ids       Array of Eventbrite organizers ids (strings)
          */
-        function __construct( $eb, $organizer_ids, $post_ids ) {
+        function __construct( $eb, $organizer_ids ) {
                 $this->eb = $eb;
-                $this->post_ids = $post_ids;
                 $this->organizer_ids = $organizer_ids;
         }
 
@@ -70,16 +68,14 @@ class EventbriteEventPlugin
         function callback_eventbrite_event( $content ) {
                 $p = get_post();
                 $events = array();
-                if ( in_array( $p->ID, $this->post_ids ) )  {
-                        foreach ( $this->organizer_ids as $id ) {
-                                $r = $this->eb->get_events( $id );
-                                if ( $r ) {
-                                        $events = array_merge( $events, $r );
-                                }
+                foreach ( $this->organizer_ids as $id ) {
+                        $r = $this->eb->get_events( $id );
+                        if ( $r ) {
+                                $events = array_merge( $events, $r );
                         }
-                        // TODO: sort
-                        $content .= $this->generate_html( $events );
                 }
+                // TODO: sort
+                $content .= $this->generate_html( $events );
                 return $content;
         }
         

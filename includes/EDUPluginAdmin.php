@@ -60,8 +60,7 @@ class EDUPluginAdmin
                         'user' => '',
                         'token'  => '',
                         'readme_owner'  => '',
-                        'readme_repo' => '',
-                        'page_ids' => ''
+                        'readme_repo' => ''
                 );
                 $github_data = shortcode_atts( $github_default_values, $github_option_values );
 
@@ -69,8 +68,7 @@ class EDUPluginAdmin
                 $meetup_option_values = $option_values[$meetup_option_name];
                 $meetup_default_values = array (
                         'key' => '',
-                        'groups'  => '',
-                        'page_ids' => ''
+                        'groups'  => ''
                 );
                 $meetup_data = shortcode_atts( $meetup_default_values, $meetup_option_values );
 
@@ -78,8 +76,7 @@ class EDUPluginAdmin
                 $eventbrite_option_values = $option_values[$eventbrite_option_name];
                 $eventbrite_default_values = array (
                         'key' => '',
-                        'organizer_ids'  => '',
-                        'page_ids' => ''
+                        'organizer_ids'  => ''
                 );
                 $eventbrite_data = shortcode_atts( $eventbrite_default_values, $eventbrite_option_values );             
 
@@ -162,20 +159,6 @@ class EDUPluginAdmin
                                 'suboption_name' => $github_option_name
                         )
                 );
-                add_settings_field(
-                        'github_readme_pages',
-                        'Page ID(s)',
-                        array( $this, 'input_callback' ),
-                        'EDUPlugin-settings',
-                        'github_readme_plugin_settings_section',
-                        array(
-                                'label_for'   => 'pagesInput',
-                                'name'        => 'page_ids',
-                                'value'       => esc_attr( $github_data['page_ids'] ),
-                                'option_name' => $option_name,
-                                'suboption_name' => $github_option_name
-                        )
-                );
 
                 // Meetup Settings
                 $print_meetup_auth = new PrintSection('Authorization');
@@ -213,20 +196,6 @@ class EDUPluginAdmin
                                 'suboption_name' => $meetup_option_name
                         )
                 );
-                add_settings_field(
-                        'meetup_event_pages',
-                        'Page ID(s)',
-                        array( $this, 'input_callback' ),
-                        'EDUPlugin-settings',
-                        'meetup_settings_section',
-                        array(
-                                'label_for'   => 'meetupPagesInput',
-                                'name'        => 'page_ids',
-                                'value'       => esc_attr( $meetup_data['page_ids'] ),
-                                'option_name' => $option_name,
-                                'suboption_name' => $meetup_option_name
-                        )
-                );
 
                 // Meetup Settings
                 $print_eventbrite_auth = new PrintSection('Authorization');
@@ -260,20 +229,6 @@ class EDUPluginAdmin
                                 'label_for'   => 'eventbriteOrganizersInput',
                                 'name'        => 'organizer_ids',
                                 'value'       => esc_attr( $eventbrite_data['organizer_ids'] ),
-                                'option_name' => $option_name,
-                                'suboption_name' => $eventbrite_option_name
-                        )
-                );
-                add_settings_field(
-                        'eventbrite_event_pages',
-                        'Page ID(s)',
-                        array( $this, 'input_callback' ),
-                        'EDUPlugin-settings',
-                        'eventbrite_settings_section',
-                        array(
-                                'label_for'   => 'eventbritePagesInput',
-                                'name'        => 'page_ids',
-                                'value'       => esc_attr( $eventbrite_data['page_ids'] ),
                                 'option_name' => $option_name,
                                 'suboption_name' => $eventbrite_option_name
                         )
