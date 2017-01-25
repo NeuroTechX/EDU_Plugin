@@ -30,8 +30,9 @@ class MeetupEventPlugin
                         $title = $event['name'];
                         $description = strip_tags( $event['description'] );
                         $group = $event['group']['name'];
+                        $group_link = $this->mu->get_group_profile_url( $event['group']['urlname'] );
 
-                        $content = HTMLUtils::event_domdoc( $title, $description, $datetime, $group, $link, 'meetup-event-item' );
+                        $content = HTMLUtils::event_domdoc( $title, $description, $datetime, $group, $group_link, $link, 'meetup-event-item' );
                         HTMLUtils::append( $dom, $content );
                 }
                 HTMLUtils::div_wrap( $dom, $class );

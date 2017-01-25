@@ -30,8 +30,9 @@ class EventbriteEventPlugin
                         $title = $event['name']['text'];
                         $description = $event['description']['text'];
                         $organizer = $event['organizer.name'];
+                        $organizer_link = $event['organizer.url'];
 
-                        $content = HTMLUtils::event_domdoc( $title, $description, $datetime, $organizer, $link, 'eventbrite-event-item' );
+                        $content = HTMLUtils::event_domdoc( $title, $description, $datetime, $organizer, $organizer_link, $link, 'eventbrite-event-item' );
                         HTMLUtils::append( $dom, $content );
                 }
                 HTMLUtils::div_wrap( $dom, $class );
@@ -52,11 +53,14 @@ class EventbriteEventPlugin
                         $atts
                 );
                 foreach ( $this->organizer_ids as $id ) {
-                        $organizer_name = $this->eb->get_organizer( $id )['name'];
+                        $organizer = $this->eb->get_organizer( $id );
+                        $organizer_name = $organizer['name'];
+                        $organizer_url = $organizer['url'];
                         $r = $this->eb->get_events( $id );
                         if ( $r ) {
                                 foreach ( $r as &$e ) {
                                         $e['organizer.name'] = $organizer_name;
+                                        $e['organizer.url'] = $organizer_url;
                                 }
                                 $events = array_merge( $events, $r );
                         }

@@ -156,6 +156,7 @@ class Github
 class Meetup
 {
         static $url = 'https://api.meetup.com';
+        static $url_web = 'https://meetup.com';
 
         /**
          * @key         API Key
@@ -192,6 +193,12 @@ class Meetup
                 $json = json_decode( $r, true );
                 return $json;
         }
+
+        function get_group_profile_url( $urlname ) {
+                $endpoint = "/$urlname";
+                $request_url = Meetup::$url_web . $endpoint;
+                return $request_url;
+        }
 }
 
 
@@ -202,6 +209,7 @@ class Eventbrite
 {
 
         static $url = 'https://www.eventbriteapi.com/v3';
+        static $url_web = 'https://www.eventbrite.com';
         
         /**
          * @tokens         Array of API tokens
@@ -310,7 +318,7 @@ class HTMLUtils
          * @organizer           Organizer of the event (for Meetup, we use groups...)
          * @link                Link to external event page (meetup, eventbrite, ...)
          */
-        static function event_domdoc( $title, $description, $datetime, $organizer, $link, $class="" ) {
+        static function event_domdoc( $title, $description, $datetime, $organizer, $organizer_link, $link, $class="" ) {
                 $dom = new DOMDocument();
                 // divs
                 $div_date = $dom->createElement( 'div' );
@@ -341,7 +349,11 @@ class HTMLUtils
                 $a->setAttribute( 'target', '_blank' );
                 $h3->appendChild( $a );
                 // Organizer
-                $span_organizer = $dom->createElement( 'span', 'Organized by: ' . $organizer );
+                $span_organizer = $dom->createElement( 'span', 'Organized by: ');
+                $organizer_a = $dom->createElement( 'a' , $organizer );
+                $organizer_a->setAttribute( 'href', $organizer_link );
+                $organizer_a->setAttribute( 'target', '_blank' );
+                $span_organizer->appendChild( $organizer_a );
                 $div_details->appendChild( $h3 );
                 $div_details->appendChild( $span_organizer );
                 // TODO: location span
