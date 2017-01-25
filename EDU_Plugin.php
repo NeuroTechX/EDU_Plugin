@@ -67,7 +67,12 @@ class EDUPlugin
  * Another way to pass arguments to callback is to use closures (anonymous functions).
  */
 
-function run_EDUPlugin() {      
+function run_EDUPlugin() {
+        /*
+         * Set the default timezone to Eastern Time
+         */
+        date_default_timezone_set('America/Toronto');
+        
         /* 
          * Create the loader 
          */

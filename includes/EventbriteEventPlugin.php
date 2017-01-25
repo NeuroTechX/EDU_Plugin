@@ -25,7 +25,7 @@ class EventbriteEventPlugin
                 $class = isset( $atts['class'] ) ? $atts['class'] : '';
                 foreach ( $data as $i => $event ) {
                         $epoch = strtotime($event['start']['utc']);
-                        $datetime = date("j,M,Y,g:i A,T", $epoch);
+                        $datetime = date("j,M,Y,g:i A T", $epoch);
                         $link = $event['url'];
                         $title = $event['name']['text'];
                         $description = $event['description']['text'];

@@ -25,7 +25,7 @@ class MeetupEventPlugin
                 $class = isset( $atts['class'] ) ? $atts['class'] : '';
                 foreach ( $data as $i => $event ) {
                         $epoch = $event['time'] / 1000;
-                        $datetime = date("j,M,Y,g:i A,T", $epoch);
+                        $datetime = date("j,M,Y,g:i A T", $epoch);
                         $link = $event['link'];
                         $title = $event['name'];
                         $description = strip_tags( $event['description'] );
