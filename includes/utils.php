@@ -327,8 +327,8 @@ class HTMLUtils
                 $time_span->setAttribute( 'class', 'time' );
                 $div_date->appendChild( $month_span );
                 $div_date->appendChild( $day_span );
-                $div_date->appendChild( $time_span );
                 $div_date->appendChild( $year_span );
+                $div_date->appendChild( $time_span );
 
                 // Details
                 // Title
@@ -345,10 +345,9 @@ class HTMLUtils
                 
                 // Description
                 $p = $dom->createElement( 'p' , $description );
-
+                $div_details->appendChild( $p );
                 $dom->appendChild( $div_date );
                 $dom->appendChild( $div_details );
-                $dom->appendChild( $p );
 
                 if ( !empty ( $class ) ) {
                         HTMLUtils::div_wrap( $dom, $class );
