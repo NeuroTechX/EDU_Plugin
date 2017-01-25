@@ -55,7 +55,7 @@ class EventbriteEventPlugin
                         $organizer_name = $this->eb->get_organizer( $id )['name'];
                         $r = $this->eb->get_events( $id );
                         if ( $r ) {
-                                foreach ( $r as $e ) {
+                                foreach ( $r as &$e ) {
                                         $e['organizer.name'] = $organizer_name;
                                 }
                                 $events = array_merge( $events, $r );

@@ -233,8 +233,11 @@ class Eventbrite
          */
         function get_organizer( $id ) {
                 $endpoint = "/organizers/$id";
+                $endpoint .= "?token=$this->token";
+                $request_url = Eventbrite::$url . $endpoint;
                 $r = HttpRequest::get( $request_url )['content'];
-                return $r;
+                $json = json_decode( $r, true );
+                return $json;
         }
 }
 
