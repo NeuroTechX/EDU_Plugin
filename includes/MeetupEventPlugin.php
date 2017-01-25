@@ -28,7 +28,7 @@ class MeetupEventPlugin
                         $datetime = date("j,M,Y,g:i A,T", $epoch);
                         $link = $event['link'];
                         $title = $event['name'];
-                        $description = $event['description'];
+                        $description = strip_tags( $event['description'] );
                         $group = $event['group']['name'];
 
                         $content = HTMLUtils::event_domdoc( $title, $description, $datetime, $group, $link, 'meetup-event-item' );
