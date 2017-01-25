@@ -13,9 +13,6 @@ Tested up to: 1.0
 The EDU Plugin used by the NeuroTechEDU website to integrate different services from third-party APIs into wordpress.
 It is managed as if it was a single plugin but is really multiple plugins providing different types of integration with wordpress (Github, Meetup, ...).
 
-#### TODOs
-- Meetup integration
-
 
 ## Installation
 ##### Method 1: From the Admin Page
@@ -41,9 +38,11 @@ To write additional plugins, the callbacks are wrapped in a class to allow diffe
 The class contains two methods:
 - **The constructor**
 - **The callback**
+- **The shortcode method**
     
 The class constructor is used to set the states of the plugin.
 The callback is the function that gets called when the wordpress hook gets triggered.
+The shortcode method is the function that generates the page's content.
 See `includes/GithubReadmePlugin.php` as an example.
 
 The plugin is then loaded in `EDU_Plugin.php` .
@@ -108,6 +107,8 @@ The parameters that must be set from the settings page are:
 To use the plugin, add the content to a post using the following shortcode: `[eventbrite_events class="foo"]`
 where class will set the class of the div that wraps each items of the list of events.
 
+**-NOTE-**
+All times are in Eastern Time / Eastern Daylight Time.
 
 # Resources
 Some useful resources to write plugins:
