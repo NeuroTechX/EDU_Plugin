@@ -114,6 +114,7 @@ class Github
                 $endpoint = '/repos/' . $owner . '/' . $repo . '/readme';
                 $request_url = Github::$url . $endpoint;
                 $r = HttpRequest::get( $request_url, $this->headers );
+                
                 if ( $r['status_code'] != 200 &&
                      $r['status_code'] != 301 &&
                      $r['status_code'] != 302 &&
@@ -121,10 +122,12 @@ class Github
                         $readme = wp_cache_get( $key, $group );
                         return $readme ? $readme : "";
                 }
+                
                 $content = $r['content'];
-                wp_cache_set( $key, $content, $group );
                 $json = json_decode( $content, true );
-                return HttpRequest::get( $json['download_url'] )['content'];
+                $readme = HttpRequest::get( $json['download_url'] )['content'];
+                wp_cache_set( $key, $readme, $group );
+                return $readme;
         }
 
         /**
@@ -177,6 +180,10 @@ class Meetup
          * @status      Status filter (defaults to "upcoming")
          */
         function get_events( $group, $status="upcoming" ) {
+                // Cache
+                $cache_key = 'meetup_events';
+                $cache_group = 'meetup';
+                
                 $endpoint = "/$group/events";
                 if ( $status == "upcoming" ||
                      $status == "past" ||
@@ -189,8 +196,19 @@ class Meetup
                         $endpoint .= "&$key=$value";
                 }
                 $request_url = Meetup::$url . $endpoint;
-                $r = HttpRequest::get( $request_url )['content'];
-                $json = json_decode( $r, true );
+                $r = HttpRequest::get( $request_url );
+                
+                if ( $r['status_code'] != 200 &&
+                     $r['status_code'] != 301 &&
+                     $r['status_code'] != 302 &&
+                     $r['status_code'] != 307 ) {
+                        $json = wp_cache_get( $cache_key, $cache_group );
+                        return $json ? $json : array();
+                }
+                
+                $content = $r['content'];
+                $json = json_decode( $content, true );
+                wp_cache_set( $cache_key, $json, $cache_group );
                 return $json;
         }
 
@@ -222,14 +240,28 @@ class Eventbrite
          * TODO: GET /events/search/
          */
         function get_events( $organizer_id ) {
+                // Cache
+                $cache_key = 'eventbrite_events';
+                $cache_group = 'eventbrite';
+                
                 $endpoint = "/events/search";
                 $endpoint .= "?token=$this->token";
                 $endpoint .= "&organizer.id=$organizer_id";
                 $request_url = Eventbrite::$url . $endpoint;
-                $r = HttpRequest::get( $request_url )['content'];
-                $json = json_decode( $r, true );
-                $events = array_key_exists( 'events', $json ) ? $json['events'] : false;
+                $r = HttpRequest::get( $request_url );
 
+                if ( $r['status_code'] != 200 &&
+                     $r['status_code'] != 301 &&
+                     $r['status_code'] != 302 &&
+                     $r['status_code'] != 307 ) {
+                        $json = wp_cache_get( $cache_key, $cache_group );
+                        return $json ? $json : array();
+                }
+
+                $content = $r['content'];
+                $json = json_decode( $content, true );
+                $events = array_key_exists( 'events', $json ) ? $json['events'] : false;
+                wp_cache_set( $cache_key, $events, $cache_group );
                 return $events;
         }
 
