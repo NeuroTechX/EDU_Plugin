@@ -34,7 +34,7 @@ class AllEventsPlugin
                 $class = isset( $atts['class'] ) ? $atts['class'] : '';
                 foreach ( $data as $i => $event ) {
                         $datetime = $event['datetime'];
-                        $link = $event['url'];
+                        $link = $event['link'];
                         $title = $event['title'];
                         $description = $event['description'];
                         $organizer_name = $event['organizer_name'];
