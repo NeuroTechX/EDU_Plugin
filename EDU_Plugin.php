@@ -130,6 +130,10 @@ function run_EDUPlugin() {
         $ebplugin = new EventbriteEventPlugin( $eb, $eventbrite_organizer_ids );
         add_shortcode( 'eventbrite_events', array( $ebplugin, 'generate_shortcode' ) );
 
+        // AllEventsPlugin
+        $aeplugin = new AllEventsPlugin( $mu, $eb, $groups, $eventbrite_organizer_ids );
+        add_shortcode( 'all_events', array( $aeplugin, 'generate_shortcode' ) ) ;
+
         // EDUPluginAdmin
         $adminplugin = new EDUPluginAdmin();
         $EDUPlugin->add_action( 'admin_menu',
