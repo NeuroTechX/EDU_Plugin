@@ -46,7 +46,7 @@ class MeetupEventPlugin
          */
         function generate_shortcode( $atts ) {
                 $events = array();
-                $a = shortcode_atts(
+                $atts = shortcode_atts(
                         array(
                                 'class' => ''
                         ),

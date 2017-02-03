@@ -64,6 +64,13 @@ class EDUPluginAdmin
                 );
                 $github_data = shortcode_atts( $github_default_values, $github_option_values );
 
+                $google_option_name = 'google';
+                $google_option_values = $option_values[$google_option_name];
+                $google_default_values = array (
+                        'maps_key' => ''
+                );
+                $google_data = shortcode_atts( $google_default_values, $google_option_values );
+
                 $meetup_option_name = 'meetup';
                 $meetup_option_values = $option_values[$meetup_option_name];
                 $meetup_default_values = array (
@@ -197,7 +204,7 @@ class EDUPluginAdmin
                         )
                 );
 
-                // Meetup Settings
+                // Eventbrite Settings
                 $print_eventbrite_auth = new PrintSection('Authorization');
                 add_settings_section(
                         'eventbrite_settings_section',
@@ -231,6 +238,29 @@ class EDUPluginAdmin
                                 'value'       => esc_attr( $eventbrite_data['organizer_ids'] ),
                                 'option_name' => $option_name,
                                 'suboption_name' => $eventbrite_option_name
+                        )
+                );
+
+                // Google Settings
+                $print_google_auth = new PrintSection('Authorization');
+                add_settings_section(
+                        'google_settings_section',
+                        'Google Settings',
+                        array( $print_google_auth, 'print_section_info' ),
+                        'EDUPlugin-settings'
+                );
+                add_settings_field(
+                        'maps_key',
+                        'Maps Key',
+                        array( $this, 'input_callback' ),
+                        'EDUPlugin-settings',
+                        'google_settings_section',
+                        array(
+                                'label_for'   => 'googleMapsKeyInput',
+                                'name'        => 'maps_key',
+                                'value'       => esc_attr( $google_data['maps_key'] ),
+                                'option_name' => $option_name,
+                                'suboption_name' => $google_option_name
                         )
                 );
         }

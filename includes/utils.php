@@ -247,6 +247,7 @@ class Eventbrite
                 $endpoint = "/events/search";
                 $endpoint .= "?token=$this->token";
                 $endpoint .= "&organizer.id=$organizer_id";
+                $endpoint .= "&expand=venue";
                 $request_url = Eventbrite::$url . $endpoint;
                 $r = HttpRequest::get( $request_url );
 
