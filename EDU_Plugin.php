@@ -133,6 +133,7 @@ function run_EDUPlugin() {
         // AllEventsPlugin
         $aeplugin = new AllEventsPlugin( $mu, $eb, $groups, $eventbrite_organizer_ids );
         add_shortcode( 'all_events', array( $aeplugin, 'generate_shortcode' ) ) ;
+        add_shortcode( 'event_map', array( $aeplugin, 'generate_map_shortcode' ) ) ;
 
         // EDUPluginAdmin
         $adminplugin = new EDUPluginAdmin();
