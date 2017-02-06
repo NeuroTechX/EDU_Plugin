@@ -65,6 +65,8 @@ function createMap(lat, lng) {
 
 function initMap() {
     createMap();
+
+    // Only works with secure origins (Use HTTPS)
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(position) {
             var defaultLat = position.coords.latitude;
@@ -239,14 +241,14 @@ class AllEventsPlugin
                 
                 $script1 = $dom->createElement( 'script' );
                 $script1->setAttribute( 'type', 'text/javascript' );
-                // $script1->setAttribute( 'async', '1' );
-                // $script1->setAttribute( 'defer', '1' );
+                $script1->setAttribute( 'async', '1' );
+                $script1->setAttribute( 'defer', '1' );
 
                 $script2 = $dom->createElement( 'script' );
                 $script2->setAttribute( 'type', 'text/javascript' );
                 $script2->setAttribute( 'src', "https://maps.googleapis.com/maps/api/js?key=AIzaSyBTNMsmPf7CUhFpzkeCUS6JC43A7FEURi0&callback=initMap" );
-                // $script2->setAttribute( 'async', '1' );
-                // $script2->setAttribute( 'defer', '1' );
+                $script2->setAttribute( 'async', '1' );
+                $script2->setAttribute( 'defer', '1' );
 
                 $script1->textContent = sprintf( $map_script_str, $id, json_encode( $data ) );
                 $dom->appendChild( $div );
