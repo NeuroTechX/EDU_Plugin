@@ -107,8 +107,18 @@ The parameters that must be set from the settings page are:
 To use the plugin, add the content to a post using the following shortcode: `[eventbrite_events class="foo"]`
 where class will set the class of the div that wraps each items of the list of events.
 
-**-NOTE-**
-All times are in Eastern Time / Eastern Daylight Time.
+### AllEventsPlugin
+
+The AllEventsPlugin set the content of a post (post or page) to a list of all events (Meetup U Evenbrite).
+
+This plugin can also be used to draw a map (Google Maps) with markers.
+
+To use the plugin, add the content to a post using the following shortcode: `[all_events class="foo"]`
+where class will set the class of the div that wraps each items of the list of events.
+
+To add a map of events:
+`[event_map id="foo"]`
+where id is the id of the div where the map will be drawn.
 
 # Resources
 Some useful resources to write plugins:
