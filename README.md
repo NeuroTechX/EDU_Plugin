@@ -117,8 +117,9 @@ To use the plugin, add the content to a post using the following shortcode: `[al
 where class will set the class of the div that wraps each items of the list of events.
 
 To add a map of events:
-`[event_map id="foo"]`
-where id is the id of the div where the map will be drawn.
+`[event_map id="foo" scrollWheel="true"]`
+where id is the id of the div where the map will be drawn,
+      scrollWheel to enable scroll wheel scaling on the map. (Disabled by default.)
 
 # Resources
 Some useful resources to write plugins:

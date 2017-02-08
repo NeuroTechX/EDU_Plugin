@@ -30,7 +30,8 @@ function createMap(lat, lng) {
     map = new google.maps.Map(document.getElementById("%s"), {
         center: {lat: lat, lng: lng},
         zoom: 2,
-        minZoom: 1
+        minZoom: 1,
+        scrollwheel: %s
     });
 
     var data = %s;
@@ -268,7 +269,12 @@ class AllEventsPlugin
                 $script2->setAttribute( 'async', '1' );
                 $script2->setAttribute( 'defer', '1' );
 
-                $script1->textContent = sprintf( $map_script_str, $id, json_encode( $data ) );
+                $scrollwheel = isset( $atts['scrollwheel'] ) ? $atts['scrollwheel'] : 'false';
+                $script1->textContent = sprintf(
+                        $map_script_str,
+                        $id,
+                        $scrollwheel,
+                        json_encode( $data ) );
                 $dom->appendChild( $div );
                 $dom->appendChild( $script1 );
                 $dom->appendChild( $script2 );
