@@ -16,6 +16,11 @@
 // http://stackoverflow.com/questions/2330197/how-to-disable-mouse-scroll-wheel-scaling-with-google-maps-api
 
 $map_script_str = <<<'JAVASCRIPT'
+
+google.maps.InfoWindow.prototype.opened = false;
+
+lastOpenedInfoWindow;
+
 var map;
 
 function createMap(lat, lng) {
@@ -60,7 +65,18 @@ function createMap(lat, lng) {
         });
 
         marker.addListener('click', function() {
-            infowindow.open(map, marker);
+            if (infowindow.opened) {
+                infowindow.close();
+                infowindow.opened = false;
+            } else {
+                if (typeof(lastOpenedInfoWindow) !== 'undefined') {
+                    lastOpenedInfoWindow.opened = false;
+                    lastOpenedInfoWindow.close();
+                }
+                infowindow.open(map, marker);
+                infowindow.opened = true;
+                lastOpenedInfoWindow = infowindow;
+            }
         });
     });
 }
