@@ -241,7 +241,7 @@ class AllEventsPlugin
                 $atts = shortcode_atts(
                         array(
                                 'class' => '',
-                                'upto' => '+2 months'
+                                'upto' => ''
                         ),
                         $atts
                 );
