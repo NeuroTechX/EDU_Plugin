@@ -208,10 +208,12 @@ class AllEventsPlugin
          */
         function generate_html( $data, $atts=array() ) {
                 $dom = new DOMDocument();
-                $h1 = $dom->createElement( 'h1', "Upcoming Events" );
-                $dom->appendChild( $h1 );
                 $class = isset( $atts['class'] ) ? $atts['class'] : '';
                 foreach ( $data as $i => $event ) {
+                        $epoch = $event['epoch'];
+                        if ( isset( $atts['upto'] ) && !empty( $atts['upto'] ) && $epoch > strtotime( $atts['upto'] ) ) {
+                                break;
+                        }
                         $datetime = $event['datetime'];
                         $link = $event['link'];
                         $title = $event['title'];
@@ -238,7 +240,8 @@ class AllEventsPlugin
         function generate_shortcode( $atts ) {
                 $atts = shortcode_atts(
                         array(
-                                'class' => ''
+                                'class' => '',
+                                'upto' => '+2 months'
                         ),
                         $atts
                 );

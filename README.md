@@ -113,13 +113,14 @@ The AllEventsPlugin set the content of a post (post or page) to a list of all ev
 
 This plugin can also be used to draw a map (Google Maps) with markers.
 
-To use the plugin, add the content to a post using the following shortcode: `[all_events class="foo"]`
+To use the plugin, add the content to a post using the following shortcode: `[all_events class="foo" upto="+2 months"]`
 where class will set the class of the div that wraps each items of the list of events.
 
 To add a map of events:
 `[event_map id="foo" scrollWheel="true"]`
 where id is the id of the div where the map will be drawn,
       scrollWheel to enable scroll wheel scaling on the map. (Disabled by default.)
+      upto limits the events from not up to the given time. e.g. upto="+2 months" will only give the events between now and 2 months from now.
 
 # Resources
 Some useful resources to write plugins:
