@@ -126,7 +126,7 @@ class AllEventsPlugin
                                 $group = $e['group']['name'];
                                 $group_link = $this->mu->get_group_profile_url( $e['group']['urlname'] );
                                 $lat = $e['venue']['lat']; // FLOAT
-                                $lat = $e['venue']['lon']; // FLOAT
+                                $lng = $e['venue']['lon']; // FLOAT
                                 $address = $e['venue']['address_1'];
                                 $arr = array(
                                         'epoch' => $epoch,
@@ -137,7 +137,7 @@ class AllEventsPlugin
                                         'organizer_name' => $group,
                                         'organizer_link' => $group_link,
                                         'lat' => $lat,
-                                        'lng' => $lgn,
+                                        'lng' => $lng,
                                         'address' => $address
                                 );
                                 array_push(
@@ -247,7 +247,6 @@ class AllEventsPlugin
                 );
 
                 $events_all = $this->get_all_events();
-                
                 return $this->generate_html( $events_all, $atts );
         }
 
