@@ -112,6 +112,14 @@ class AllEventsPlugin
         }
 
         function get_all_events() {
+                $cache_key = 'events_all';
+                $cache_group = 'events';
+
+                $cached = wp_cache_get( $cache_key, $cache_group );
+                if ( $cached ) {
+                        return $cached;
+                }
+                
                 $events_all = array();
                 
                 // Meetup
@@ -262,7 +270,7 @@ class AllEventsPlugin
                 
                 $script1 = $dom->createElement( 'script' );
                 $script1->setAttribute( 'type', 'text/javascript' );
-                $script1->setAttribute( 'async', '1' );
+                // $script1->setAttribute( 'async', '1' );
                 $script1->setAttribute( 'defer', '1' );
 
                 $script2 = $dom->createElement( 'script' );

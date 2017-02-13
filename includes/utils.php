@@ -111,6 +111,11 @@ class Github
                 $key = $owner . ':' . $repo;
                 $group = 'github_readme';
 
+                $cached = wp_cache_get( $key, $group );
+                if ( $cached ) {
+                        return $cached;
+                }
+
                 $endpoint = '/repos/' . $owner . '/' . $repo . '/readme';
                 $request_url = Github::$url . $endpoint;
                 $r = HttpRequest::get( $request_url, $this->headers );
@@ -182,7 +187,12 @@ class Meetup
         function get_events( $group, $status="upcoming" ) {
                 // Cache
                 $cache_key = 'meetup_events';
-                $cache_group = 'meetup';
+                $cache_group = 'meetup_' . $group;
+
+                $cached = wp_cache_get( $cache_key, $cache_group );
+                if ( $cached ) {
+                        return $cached;
+                }
                 
                 $endpoint = "/$group/events";
                 if ( $status == "upcoming" ||
@@ -208,7 +218,7 @@ class Meetup
                 
                 $content = $r['content'];
                 $json = json_decode( $content, true );
-                wp_cache_set( $cache_key, $json, $cache_group );
+                wp_cache_set( $cache_key, $json, $cache_group, 300 );
                 return $json;
         }
 
@@ -242,7 +252,12 @@ class Eventbrite
         function get_events( $organizer_id ) {
                 // Cache
                 $cache_key = 'eventbrite_events';
-                $cache_group = 'eventbrite';
+                $cache_group = 'eventbrite_' . $organizer_id;
+
+                $cached = wp_cache_get( $cache_key, $cache_group );
+                if ( $cached ) {
+                        return $cached;
+                }
                 
                 $endpoint = "/events/search";
                 $endpoint .= "?token=$this->token";
@@ -263,7 +278,7 @@ class Eventbrite
                 $content = $r['content'];
                 $json = json_decode( $content, true );
                 $events = array_key_exists( 'events', $json ) ? $json['events'] : false;
-                wp_cache_set( $cache_key, $events, $cache_group );
+                wp_cache_set( $cache_key, $events, $cache_group, 300 );
                 return $events;
         }
 
