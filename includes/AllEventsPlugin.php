@@ -177,7 +177,7 @@ class AllEventsPlugin
                                                 'title' => $title,
                                                 'description' => $description,
                                                 'organizer_name' => $organizer_name,
-                                                'organizer_link' => $organizer_link,
+                                                'organizer_link' => $organizer_url,
                                                 'lat' => $lat,
                                                 'lng' => $lng,
                                                 'address' => $address
@@ -196,7 +196,7 @@ class AllEventsPlugin
                         }
                         return ( $a['epoch'] < $b['epoch'] ) ? -1 : 1;
                 } );
-                wp_cache_set( "events_all", $events_all, "events", 300 );
+                wp_cache_set( "events_all", $events_all, "events", 3600 );
                 return $events_all;
         }
 
