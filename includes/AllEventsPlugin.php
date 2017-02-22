@@ -13,7 +13,6 @@
 //         'address' => $address
 // }
 
-// http://stackoverflow.com/questions/2330197/how-to-disable-mouse-scroll-wheel-scaling-with-google-maps-api
 
 $map_script_str = <<<'JAVASCRIPT'
 
@@ -270,7 +269,7 @@ class AllEventsPlugin
                 
                 $script1 = $dom->createElement( 'script' );
                 $script1->setAttribute( 'type', 'text/javascript' );
-                // $script1->setAttribute( 'async', '1' );
+                $script1->setAttribute( 'async', '1' );
                 $script1->setAttribute( 'defer', '1' );
 
                 $script2 = $dom->createElement( 'script' );

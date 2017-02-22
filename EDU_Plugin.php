@@ -11,6 +11,7 @@
    Version: 1.0
    Author URI: ""
  */
+
 require_once plugin_dir_path( __FILE__ ) . 'includes/utils.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/EDUPluginAdmin.php';
 
@@ -22,6 +23,16 @@ foreach ( scandir( plugin_dir_path( __FILE__ ) . 'includes/' ) as $filename ) {
         }
 }
 
+add_action( 'send_headers', 'varnish_safe_http_headers' );
+function varnish_safe_http_headers() {
+        header( 'X-UA-Compatible: IE=edge,chrome=1' );
+        session_cache_limiter('');
+        header("Cache-Control: public, s-maxage=120");
+        if( !session_id() )
+        {
+                session_start();
+        }
+}
 
 /**
  * The main class responsible for loading the hooks.
@@ -66,7 +77,6 @@ class EDUPlugin
  * Plugins callback are wrapped in class to allow passing arguments.
  * Another way to pass arguments to callback is to use closures (anonymous functions).
  */
-
 function run_EDUPlugin() {
         /*
          * Set the default timezone to Eastern Time
@@ -143,7 +153,6 @@ function run_EDUPlugin() {
                                 array( $adminplugin, 'EDUPlugin_page_init' ) );
         $EDUPlugin->add_filter( 'plugin_action_links_' . plugin_basename(__FILE__),
                                 array( $adminplugin, 'EDUPlugin_action_links') );
-
         /*
          * Start the plugin 
          */
