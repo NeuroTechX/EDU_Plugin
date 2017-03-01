@@ -1,17 +1,18 @@
 <?php
 
-// {
-//         'epoch' => $epoch,
-//         'datetime' => $datetime,
-//         'link' => $link,
-//         'title' => $title,
-//         'description' => $description,
-//         'organizer_name' => $organizer_name,
-//         'organizer_link' => $organizer_link,
-//         'lat' => $lat,
-//         'lng' => $lng,
-//         'address' => $address
-// }
+
+$event_filter_script_str = <<<'JAVASCRIPT'
+
+var eventFilterStyle = document.getElementById('eventFilterStyle');
+document.getElementById('eventFilterTextInput').addEventListener('input', function() {
+    if (!this.value) {
+        eventFilterStyle.innerHTML = "";
+        return;
+    }
+    eventFilterStyle.innerHTML = ".event-item:not([data-city*=\"" + this.value.toLowerCase() + "\"]) { display: none; }";
+});
+
+JAVASCRIPT;
 
 
 $map_script_str = <<<'JAVASCRIPT'
@@ -135,6 +136,7 @@ class AllEventsPlugin
                                 $lat = $e['venue']['lat']; // FLOAT
                                 $lng = $e['venue']['lon']; // FLOAT
                                 $address = $e['venue']['address_1'];
+                                $city = $e['venue']['city'];
                                 $arr = array(
                                         'epoch' => $epoch,
                                         'datetime' => $datetime,
@@ -145,7 +147,8 @@ class AllEventsPlugin
                                         'organizer_link' => $group_link,
                                         'lat' => $lat,
                                         'lng' => $lng,
-                                        'address' => $address
+                                        'address' => $address,
+                                        'city' => $city
                                 );
                                 array_push(
                                         $events_all,
@@ -169,6 +172,7 @@ class AllEventsPlugin
                                         $lat = floatval( $e['venue']['latitude'] );
                                         $lng = floatval( $e['venue']['longitude'] );
                                         $address = $e['venue']['address']['address_1'];
+                                        $city = $e['venue']['city'];
                                         $arr = array(
                                                 'epoch' => $epoch,
                                                 'datetime' => $datetime,
@@ -179,7 +183,8 @@ class AllEventsPlugin
                                                 'organizer_link' => $organizer_url,
                                                 'lat' => $lat,
                                                 'lng' => $lng,
-                                                'address' => $address
+                                                'address' => $address,
+                                                'city' => $city
                                         );
                                         array_push(
                                                 $events_all,
@@ -214,6 +219,8 @@ class AllEventsPlugin
          * @atts        Array of attributes set by shortcodes
          */
         function generate_html( $data, $atts=array() ) {
+                global $event_filter_script_str;
+
                 $dom = new DOMDocument();
                 $class = isset( $atts['class'] ) ? $atts['class'] : '';
                 foreach ( $data as $i => $event ) {
@@ -227,14 +234,31 @@ class AllEventsPlugin
                         $description = $event['description'];
                         $organizer_name = $event['organizer_name'];
                         $organizer_link = $event['organizer_link'];
-                        
-                        $content = HTMLUtils::event_domdoc( $title, $description, $datetime, $organizer_name, $organizer_link, $link, 'event-item' );
+                        $city = $event['city'];
+
+                        $dataAttributes = array(
+                                'data-city' => strtolower( $city )
+                        );
+
+                        $content = HTMLUtils::event_domdoc( $title, $description, $datetime, $organizer_name, $organizer_link, $link, 'event-item', $dataAttributes );
                         HTMLUtils::append( $dom, $content );
 
                         //
                         // TODO: Output "markers" containing the markers info (lat, lng, info) for the google maps
                         //
                 }
+
+                $filterStyle = $dom->createElement( 'style' );
+                $filterStyle->setAttribute( 'id', 'eventFilterStyle' );
+                $filterScript = $dom->createElement( 'script' );
+                $filterScript->setAttribute( 'type', 'text/javascript' );
+                $filterScript->setAttribute( 'async', '1' );
+                $filterScript->setAttribute( 'defer', '1' );
+                $filterScript->textContent = $event_filter_script_str;
+
+                $dom->appendChild( $filterStyle );
+                $dom->appendChild( $filterScript );
+
                 HTMLUtils::div_wrap( $dom, $class );
                 return $dom->saveHTML();
         }

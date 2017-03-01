@@ -366,8 +366,10 @@ class HTMLUtils
          *                      "j,M,Y,g:i A,T"  (day,month,year,time,timezone)
          * @organizer           Organizer of the event (for Meetup, we use groups...)
          * @link                Link to external event page (meetup, eventbrite, ...)
+         * @class               Wrapping div's class name
+         * @data                Assoc array of additional data attributes to add to the div
          */
-        static function event_domdoc( $title, $description, $datetime, $organizer, $organizer_link, $link, $class="" ) {
+        static function event_domdoc( $title, $description, $datetime, $organizer, $organizer_link, $link, $class="", $data=array() ) {
                 $dom = new DOMDocument();
                 // divs
                 $div_date = $dom->createElement( 'div' );
@@ -414,7 +416,7 @@ class HTMLUtils
                 $dom->appendChild( $div_details );
 
                 if ( !empty ( $class ) ) {
-                        HTMLUtils::div_wrap( $dom, $class );
+                        HTMLUtils::div_wrap( $dom, $class, $data );
                 }
                 return $dom;
         }
@@ -422,10 +424,13 @@ class HTMLUtils
         /**
          * Wraps the given DOMDocument in a div
          */
-        static function div_wrap( $dom, $class="" ) {
+        static function div_wrap( $dom, $class="", $data=array() ) {
                 $div = $dom->createElement( 'div' );
                 if ( !empty( $class ) ) {
                         $div->setAttribute( 'class', $class );
+                }
+                foreach ( $data as $att => $val ) {
+                        $div->setAttribute( $att, $val );
                 }
                 while ( $dom->childNodes->length > 0 ) {
                         $child = $dom->childNodes->item(0);
