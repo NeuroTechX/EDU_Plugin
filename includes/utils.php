@@ -183,10 +183,10 @@ class Meetup
          *
          * @group       Meetup group to get event from
          * @status      Status filter (defaults to "upcoming")
-	 *
-	 * Refer to Meetup's API documentation for more
-	 * information on the format.
-	 *
+         *
+         * Refer to Meetup's API documentation for more
+         * information on the format.
+         *
          */
         function get_events( $group, $status="upcoming" ) {
                 // Cache
@@ -252,11 +252,11 @@ class Eventbrite
 
         /**
          * Return an assoc array representation of the json from Eventbrite's API.
-	 *
-         * @organizer_id	Organizer id of the event
-	 * 
-	 * Refer to Eventbrite's API documentation for more
-	 * information on the format.
+         *
+         * @organizer_id        Organizer id of the event
+         * 
+         * Refer to Eventbrite's API documentation for more
+         * information on the format.
          */
         function get_events( $organizer_id ) {
                 // Cache
@@ -433,10 +433,10 @@ class HTMLUtils
 
         /**
          * Wraps the given DOMDocument in a div
-	 *
-	 * @dom		The DOMDocument object to wrap
-	 * @class	The class of the wrapping div
-	 * @data	Assoc array of additional data attributes to add to the div
+         *
+         * @dom         The DOMDocument object to wrap
+         * @class       The class of the wrapping div
+         * @data        Assoc array of additional data attributes to add to the div
          */
         static function div_wrap( $dom, $class="", $data=array() ) {
                 $div = $dom->createElement( 'div' );

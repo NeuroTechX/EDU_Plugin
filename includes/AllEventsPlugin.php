@@ -151,10 +151,10 @@ class AllEventsPlugin
 {
 
         /**
-         * @mu			Meetup object
-         * @eb			Eventbrite object
-         * @groups		Array of Meetup groups
-         * @organizer_ids	Array of Eventbrite organizers' ids
+         * @mu                  Meetup object
+         * @eb                  Eventbrite object
+         * @groups              Array of Meetup groups
+         * @organizer_ids       Array of Eventbrite organizers' ids
          */
         function __construct( $mu, $eb, $groups, $organizer_ids ) {
                 $this->eb = $eb;
@@ -163,11 +163,11 @@ class AllEventsPlugin
                 $this->groups = $groups;
         }
 
-	/**
-	 * Return an array of events from Eventbrite and Meetup.
-	 * See the heading of this file for more information about
-	 * the format used.
-	 */
+        /**
+         * Return an array of events from Eventbrite and Meetup.
+         * See the heading of this file for more information about
+         * the format used.
+         */
         function get_all_events() {
                 $cache_key = 'events_all';
                 $cache_group = 'events';
@@ -265,7 +265,7 @@ class AllEventsPlugin
          * Generate the output as html
          *
          * @data        Array of events objects
-	 *              (See the heading of this file for more info about the format used).
+         *              (See the heading of this file for more info about the format used).
          *
          * @atts        Array of attributes set by shortcodes
          */
@@ -330,10 +330,10 @@ class AllEventsPlugin
 
         /**
          * Generate the html that will draw the map
-	 * i.e div and script tags
+         * i.e div and script tags
          *
          * @data        Array of events objects
-	 *              (See the heading of this file for more info about the format used).
+         *              (See the heading of this file for more info about the format used).
          *
          * @atts        Array of attributes set by shortcodes
          */        
@@ -370,7 +370,7 @@ class AllEventsPlugin
                 return $dom->saveHTML();
         }
 
-	/**
+        /**
          * Generate the map's shortcode output
          *
          * @atts        Array of attributes set by shortcodes
