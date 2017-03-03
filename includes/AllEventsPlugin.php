@@ -1,6 +1,43 @@
 <?php
+/**
+ * Meetup and Eventbrite have different representation of an event.
+ * To generate content from both, we aggregate the data from both source
+ * using the following format:
+ *
+ *   [
+ *     {
+ *       'epoch': $epoch,
+ *       'datetime': $datetime,
+ *       'link': $link,
+ *       'title': $title,
+ *       'description': $description,
+ *       'organizer_name': $organizer_name,
+ *       'organizer_link': $organizer_url,
+ *       'lat': $lat,
+ *       'lng': $lng,
+ *       'address': $address,
+ *       'city': $city
+ *     },
+ *     .
+ *     .
+ *     .
+ *   ]
+ *
+ * For example, when passing the data to the Javascript script string
+ * by way of formatted string (sprintf), the string needs to be a
+ * json encoded string representation of the above format.
+ *
+ * Similarly, when working in PHP, events from both Meetup and Eventbrite
+ * should be in the same format (using PHP arrays and assoc).
+ *
+ */
 
 
+/**
+ * Javascript to update style element on user input.
+ * Implements basic filtering based on some data attributes.
+ * In this case, "data-city"
+ */
 $event_filter_script_str = <<<'JAVASCRIPT'
 
 var eventFilterStyle = document.getElementById('eventFilterStyle');
@@ -15,6 +52,14 @@ document.getElementById('eventFilterTextInput').addEventListener('input', functi
 JAVASCRIPT;
 
 
+/**
+ * Javascript to generate map with markers of events.
+ *
+ * String placeholders (order matters!):
+ *   - id: id of the div in which draw the map
+ *   - scrollwheel: true | false (whether or not to allow scroll wheel zoom on the map
+ *   - data: a json encoded string of the events.
+ */
 $map_script_str = <<<'JAVASCRIPT'
 
 google.maps.InfoWindow.prototype.opened = false;
@@ -98,11 +143,18 @@ function initMap() {
 
 JAVASCRIPT;
 
+
+/**
+ * Plugin to generate content from all events (Meetup, Eventbrite, ...)
+ */
 class AllEventsPlugin
 {
 
         /**
-         *
+         * @mu			Meetup object
+         * @eb			Eventbrite object
+         * @groups		Array of Meetup groups
+         * @organizer_ids	Array of Eventbrite organizers' ids
          */
         function __construct( $mu, $eb, $groups, $organizer_ids ) {
                 $this->eb = $eb;
@@ -111,6 +163,11 @@ class AllEventsPlugin
                 $this->groups = $groups;
         }
 
+	/**
+	 * Return an array of events from Eventbrite and Meetup.
+	 * See the heading of this file for more information about
+	 * the format used.
+	 */
         function get_all_events() {
                 $cache_key = 'events_all';
                 $cache_group = 'events';
@@ -208,13 +265,7 @@ class AllEventsPlugin
          * Generate the output as html
          *
          * @data        Array of events objects
-         *              Each object must have the following attributes:
-         *              - time: int
-         *              - link: string
-         *              - title: string
-         *              - description: string
-         *              - organizer_name: string
-         *              - organizer_link: string
+	 *              (See the heading of this file for more info about the format used).
          *
          * @atts        Array of attributes set by shortcodes
          */
@@ -242,10 +293,6 @@ class AllEventsPlugin
 
                         $content = HTMLUtils::event_domdoc( $title, $description, $datetime, $organizer_name, $organizer_link, $link, 'event-item', $dataAttributes );
                         HTMLUtils::append( $dom, $content );
-
-                        //
-                        // TODO: Output "markers" containing the markers info (lat, lng, info) for the google maps
-                        //
                 }
 
                 $filterStyle = $dom->createElement( 'style' );
@@ -281,7 +328,15 @@ class AllEventsPlugin
                 return $this->generate_html( $events_all, $atts );
         }
 
-        
+        /**
+         * Generate the html that will draw the map
+	 * i.e div and script tags
+         *
+         * @data        Array of events objects
+	 *              (See the heading of this file for more info about the format used).
+         *
+         * @atts        Array of attributes set by shortcodes
+         */        
         function generate_maps_html( $data, $atts ) {
                 global $map_script_str;
 
@@ -315,6 +370,11 @@ class AllEventsPlugin
                 return $dom->saveHTML();
         }
 
+	/**
+         * Generate the map's shortcode output
+         *
+         * @atts        Array of attributes set by shortcodes
+         */
         function generate_map_shortcode( $atts ) {
                 $data = wp_cache_get( "events_all", "events" );
                 if ( ! $data ) {

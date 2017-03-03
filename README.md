@@ -52,7 +52,7 @@ Depending on the plugin's use case, call *`add_action`* or *`add_filter`* member
 
 For plugins involving generating content in a page or post, it is preferable and more flexible to use the shortcode api.
 In this case, instead of a callback function in the plugin class, we use a function to generate the desired output and use the add_shortcode() interface.
-See (https://codex.wordpress.org/Shortcode_API)[https://codex.wordpress.org/Shortcode_API]
+See https://codex.wordpress.org/Shortcode_API
 
 e.g. 
 ```php
@@ -83,7 +83,8 @@ The parameters that must be set from the settings page are:
 - Repo name
 
 To use the plugin, add the content to a post using the following shortcode: `[github_readme class="foo"]`
-where class will set the class of the div that wraps the content of the readme.
+where:
+- **class** will set the class of the div that wraps the content of the readme.
 
 ### MeetupEventPlugin
 
@@ -94,7 +95,8 @@ The parameters that must be set from the settings page are:
 - Event groups
 
 To use the plugin, add the content to a post using the following shortcode: `[meetup_events class="foo"]`
-where class will set the class of the div that wraps each items of the list of events.
+where:
+- **class** will set the class of the div that wraps each items of the list of events.
 
 ### EventbriteEventPlugin
 
@@ -105,7 +107,8 @@ The parameters that must be set from the settings page are:
 - A list of comma separated organizer ids to get the events from
 
 To use the plugin, add the content to a post using the following shortcode: `[eventbrite_events class="foo"]`
-where class will set the class of the div that wraps each items of the list of events.
+where:
+- **class** will set the class of the div that wraps each items of the list of events.
 
 ### AllEventsPlugin
 
@@ -114,13 +117,19 @@ The AllEventsPlugin set the content of a post (post or page) to a list of all ev
 This plugin can also be used to draw a map (Google Maps) with markers.
 
 To use the plugin, add the content to a post using the following shortcode: `[all_events class="foo" upto="+2 months"]`
-where class will set the class of the div that wraps each items of the list of events.
+where:
+- **class** will set the class of the div that wraps each items of the list of events,
+- **upto** limits the events from not up to the given time. e.g. `upto="+2 months"` will only give the events between now and 2 months from now.
+
+It is also possible to add an text input element on the same page as the above shortcode to allow filtering by city. To do so, add an input element on the same page as the above shortcode with id="eventFilterTextInput":
+`<input type="text" placeholder="City" id="eventFilterTextInput">`.
 
 To add a map of events:
 `[event_map id="foo" scrollWheel="true"]`
-where id is the id of the div where the map will be drawn,
-      scrollWheel to enable scroll wheel scaling on the map. (Disabled by default.)
-      upto limits the events from not up to the given time. e.g. upto="+2 months" will only give the events between now and 2 months from now.
+where:
+- **id** is the id of the div where the map will be drawn,
+- **scrollWheel** to enable scroll wheel scaling on the map. (Disabled by default.)
+
 
 # Resources
 Some useful resources to write plugins:
