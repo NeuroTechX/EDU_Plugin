@@ -130,6 +130,30 @@ where:
 - **id** is the id of the div where the map will be drawn,
 - **scrollWheel** to enable scroll wheel scaling on the map. (Disabled by default.)
 
+Since Meetup and Eventbrite have similar, but still different representations of an event, we need to aggregate the data from both source into a common format.
+We use the following standard:
+
+```javascript
+[
+    {
+        'epoch': $epoch,
+        'datetime': $datetime,
+        'link': $link,
+        'title': $title,
+        'description': $description,
+        'organizer_name': $organizer_name,
+        'organizer_link': $organizer_url,
+        'lat': $lat,
+        'lng': $lng,
+        'address': $address,
+        'city': $city
+    },
+    .
+    .
+    .
+]
+```
+
 
 # Resources
 Some useful resources to write plugins:
