@@ -121,8 +121,14 @@ where:
 - **class** will set the class of the div that wraps each items of the list of events,
 - **upto** limits the events from not up to the given time. e.g. `upto="+2 months"` will only give the events between now and 2 months from now.
 
-It is also possible to add an text input element on the same page as the above shortcode to allow filtering by city. To do so, add an input element on the same page as the above shortcode with id="eventFilterTextInput":
+It is also possible to add text input elements on the same page as the above shortcode to allow filtering by city and/or date range. To do so, add an input element on the same page as the above shortcode with id="eventFilterTextInput":
 `<input type="text" placeholder="City" id="eventFilterTextInput">`.
+
+This will add the possibility to filter the events by its city's name.
+
+To allow filtering by a date range, add two input elements with type="date" with the following ids:
+`<input type="date" placeholder="From" id="eventFilterFromDateInput">`
+`<input type="date" placeholder="To" id="eventFilterToDateInput">`
 
 To add a map of events:
 `[event_map id="foo" scrollWheel="true"]`
