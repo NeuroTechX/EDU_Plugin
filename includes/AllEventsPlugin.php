@@ -41,11 +41,6 @@
 $event_filter_script_str = <<<'JAVASCRIPT'
 
 var eventFilterStyle = document.getElementById('eventFilterStyle');
-var eventItems = document.getElementsByClassName('event-item');
-
-// Initialize the value of the "FromDate" input to today's date
-document.getElementById('eventFilterFromDateInput').value = (new Date()).toISOString().split(/\T/)[0];
-
 
 document.getElementById('eventFilterTextInput').addEventListener('input', function() {
     if (!this.value) {
@@ -55,112 +50,6 @@ document.getElementById('eventFilterTextInput').addEventListener('input', functi
     eventFilterStyle.innerHTML = ".event-item:not([data-city*=\"" + this.value.toLowerCase() + "\"]) { display: none; }";
 });
 
-
-document.getElementById('eventFilterFromDateInput').addEventListener('change', function() {
-    var toDate = document.getElementById('eventFilterToDateInput').value;
-
-    // Empty FromDate
-    if (!this.value) {
-        removeStyle(eventItems);
-        // If ToDate is set, do some filtering...
-        if (toDate) {
-            for (var i = 0; i < eventItems.length; i++) {
-                var eventEpoch = parseInt(eventItems[i].dataset.date);
-                var eventDate = new Date(0);
-                eventDate.setUTCSeconds(eventEpoch);
-                var ds2 = toDate.split(/\D/);
-                var d2 = new Date(ds2[0], ds2[1]-1, ds2[2]);
-                if (!(eventDate < d2)) {
-                    eventItems[i].setAttribute('style', 'display:none;');
-                }
-            }
-        }
-        return;
-    }
-
-    // Non-empty FromDate
-    var ds1 = this.value.split(/\D/);
-    var d1 = new Date(ds1[0], ds1[1]-1, ds1[2]);
-
-    removeStyle(eventItems);
-    for (var i = 0; i < eventItems.length; i++) {
-        var eventEpoch = parseInt(eventItems[i].dataset.date);
-        var eventDate = new Date(0);
-        eventDate.setUTCSeconds(eventEpoch);
-        if (!(eventDate > d1)) {
-            eventItems[i].setAttribute('style', 'display:none;');
-        }
-    }
-    if (toDate) {
-        for (var i = 0; i < eventItems.length; i++) {
-            var eventEpoch = parseInt(eventItems[i].dataset.date);
-            var eventDate = new Date(0);
-            eventDate.setUTCSeconds(eventEpoch);
-            var ds2 = toDate.split(/\D/);
-            var d2 = new Date(ds2[0], ds2[1]-1, ds2[2]);
-            if (!(eventDate < d2) || !(eventDate > d1)) {
-                eventItems[i].setAttribute('style', 'display:none;');
-            }
-        }
-    }
-});
-
-
-document.getElementById('eventFilterToDateInput').addEventListener('change', function() {
-    var fromDate = document.getElementById('eventFilterFromDateInput').value;
-
-    // Empty ToDate
-    if (!this.value) {
-        removeStyle(eventItems);
-        // If FromDate is set, do some filtering...
-        if (fromDate) {
-            for (var i = 0; i < eventItems.length; i++) {
-                var eventEpoch = parseInt(eventItems[i].dataset.date);
-                var eventDate = new Date(0);
-                eventDate.setUTCSeconds(eventEpoch);
-                var ds1 = fromDate.split(/\D/);
-                var d1 = new Date(ds1[0], ds1[1]-1, ds1[2]);
-                if (!(eventDate > d1)) {
-                    eventItems[i].setAttribute('style', 'display:none;');
-                }
-            }
-        }
-        return;
-    }
-
-    // Non-empty ToDate
-    var ds2 = this.value.split(/\D/);
-    var d2 = new Date(ds2[0], ds2[1]-1, ds2[2]);
-
-    removeStyle(eventItems);
-    for (var i = 0; i < eventItems.length; i++) {
-        var eventEpoch = parseInt(eventItems[i].dataset.date);
-        var eventDate = new Date(0);
-        eventDate.setUTCSeconds(eventEpoch);
-        if (!(eventDate < d2)) {
-            eventItems[i].setAttribute('style', 'display:none;');
-        }
-    }
-    if (fromDate) {
-        for (var i = 0; i < eventItems.length; i++) {
-            var eventEpoch = parseInt(eventItems[i].dataset.date);
-            var eventDate = new Date(0);
-            eventDate.setUTCSeconds(eventEpoch);
-            var ds1 = fromDate.split(/\D/);
-            var d1 = new Date(ds1[0], ds1[1]-1, ds1[2]);
-            if (!(eventDate > d1) || !(eventDate < d2)) {
-                eventItems[i].setAttribute('style', 'display:none;');
-            }
-        }
-    }
-});
-
-
-function removeStyle(domlist) {
-    for (var i = 0; i < domlist.length; i++) {
-        domlist[i].removeAttribute('style');
-    }
-}
 
 JAVASCRIPT;
 
@@ -251,6 +140,144 @@ function initMap() {
             map.setCenter({lat: defaultLat, lng:defaultLng});
             map.setZoom(7);
         });
+    }
+}
+
+JAVASCRIPT;
+
+
+/**
+ * Webshim configuration
+ */
+$polyfiller_script_str = <<<'JAVASCRIPT'
+
+webshim.setOptions('forms-ext', {
+    replaceUI: 'auto',
+    types: 'date',
+    date: {
+        startView: 2,
+        openOnFocus: true,
+        classes: 'hide-inputbtns',
+        buttonOnly: true
+    }
+});
+
+webshim.setOptions('forms', {
+    lazyCustomMessages: true
+});
+
+webshim.polyfill('forms forms-ext');
+
+(function($) {
+
+    var eventItems = $('.event-item');
+    $('#eventFilterFromDateInput').val((new Date()).toISOString().split(/\T/)[0]);
+
+    $('#eventFilterFromDateInput').on('change', function() {
+        var toDate = $('#eventFilterToDateInput').val();
+    
+        // Empty FromDate
+        if (!$(this).val()) {
+            removeStyle(eventItems);
+            // If ToDate is set, do some filtering...
+            if (toDate) {
+                for (var i = 0; i < eventItems.length; i++) {
+                    var eventEpoch = parseInt(eventItems[i].dataset['date']);
+                    var eventDate = new Date(0);
+                    eventDate.setUTCSeconds(eventEpoch);
+                    var ds2 = toDate.split(/\D/);
+                    var d2 = new Date(ds2[0], ds2[1]-1, ds2[2]);
+                    if (!(eventDate < d2)) {
+                        eventItems[i].setAttribute('style', 'display:none;');
+                    }
+                }
+            }
+            return;
+        }
+
+        // Non-empty FromDate
+        var ds1 = $(this).val().split(/\D/);
+        var d1 = new Date(ds1[0], ds1[1]-1, ds1[2]);
+    
+        removeStyle(eventItems);
+        for (var i = 0; i < eventItems.length; i++) {
+            var eventEpoch = parseInt(eventItems[i].dataset['date']);
+            var eventDate = new Date(0);
+            eventDate.setUTCSeconds(eventEpoch);
+            if (!(eventDate > d1)) {
+                eventItems[i].setAttribute('style', 'display:none;');
+            }
+        }
+        if (toDate) {
+            for (var i = 0; i < eventItems.length; i++) {
+                var eventEpoch = parseInt(eventItems[i].dataset['date']);
+                var eventDate = new Date(0);
+                eventDate.setUTCSeconds(eventEpoch);
+                var ds2 = toDate.split(/\D/);
+                var d2 = new Date(ds2[0], ds2[1]-1, ds2[2]);
+                if (!(eventDate < d2) || !(eventDate > d1)) {
+                    eventItems[i].setAttribute('style', 'display:none;');
+                }
+            }
+        }
+    });
+
+
+    $('#eventFilterToDateInput').on('change', function() {
+        var fromDate = $('#eventFilterFromDateInput').val();
+    
+        // Empty ToDate
+        if (!$(this).val()) {
+            removeStyle(eventItems);
+            // If FromDate is set, do some filtering...
+            if (fromDate) {
+                for (var i = 0; i < eventItems.length; i++) {
+                    var eventEpoch = parseInt(eventItems[i].dataset['date']);
+                    var eventDate = new Date(0);
+                    eventDate.setUTCSeconds(eventEpoch);
+                    var ds1 = fromDate.split(/\D/);
+                    var d1 = new Date(ds1[0], ds1[1]-1, ds1[2]);
+                    if (!(eventDate > d1)) {
+                        eventItems[i].setAttribute('style', 'display:none;');
+                    }
+                }
+            }
+            return;
+        }
+    
+        // Non-empty ToDate
+        var ds2 = $(this).val().split(/\D/);
+        var d2 = new Date(ds2[0], ds2[1]-1, ds2[2]);
+    
+        removeStyle(eventItems);
+        for (var i = 0; i < eventItems.length; i++) {
+            var eventEpoch = parseInt(eventItems[i].dataset['date']);
+            var eventDate = new Date(0);
+            eventDate.setUTCSeconds(eventEpoch);
+            if (!(eventDate < d2)) {
+                eventItems[i].setAttribute('style', 'display:none;');
+            }
+        }
+        if (fromDate) {
+            for (var i = 0; i < eventItems.length; i++) {
+                var eventEpoch = parseInt(eventItems[i].dataset['date']);
+                var eventDate = new Date(0);
+                eventDate.setUTCSeconds(eventEpoch);
+                var ds1 = fromDate.split(/\D/);
+                var d1 = new Date(ds1[0], ds1[1]-1, ds1[2]);
+                if (!(eventDate > d1) || !(eventDate < d2)) {
+                    eventItems[i].setAttribute('style', 'display:none;');
+                }
+            }
+        }
+    });
+
+
+})(jQuery);
+
+function removeStyle(domlist) {
+    for (var i = 0; i < domlist.length; i++) {
+        domlist[i].removeAttribute('style');
     }
 }
 
@@ -384,6 +411,7 @@ class AllEventsPlugin
          */
         function generate_html( $data, $atts=array() ) {
                 global $event_filter_script_str;
+                global $polyfiller_script_str;
 
                 $dom = new DOMDocument();
                 $class = isset( $atts['class'] ) ? $atts['class'] : '';
@@ -417,8 +445,16 @@ class AllEventsPlugin
                 $filterScript->setAttribute( 'defer', '1' );
                 $filterScript->textContent = $event_filter_script_str;
 
+                $polyfillerLib = $dom->createElement( 'script' );
+                $polyfillerLib->setAttribute( 'src', "https://cdnjs.cloudflare.com/ajax/libs/webshim/1.16.0/minified/polyfiller.js" );
+                $polyfillerScript = $dom->createElement( 'script' );
+                $polyfillerScript->setAttribute( 'defer', '1' );
+                $polyfillerScript->textContent = $polyfiller_script_str;
+
                 $dom->appendChild( $filterStyle );
                 $dom->appendChild( $filterScript );
+                $dom->appendChild( $polyfillerLib );
+                $dom->appendChild( $polyfillerScript );
 
                 HTMLUtils::div_wrap( $dom, $class );
                 return $dom->saveHTML();
