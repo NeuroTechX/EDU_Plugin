@@ -151,6 +151,11 @@ JAVASCRIPT;
  */
 $polyfiller_script_str = <<<'JAVASCRIPT'
 
+webshim.setOptions('forms', {
+    lazyCustomMessages: true,
+    addValidators: true
+});
+
 webshim.setOptions('forms-ext', {
     replaceUI: 'auto',
     types: 'date',
@@ -162,13 +167,13 @@ webshim.setOptions('forms-ext', {
     }
 });
 
-webshim.setOptions('forms', {
-    lazyCustomMessages: true
-});
-
 webshim.polyfill('forms forms-ext');
 
 (function($) {
+
+    $('#eventFilterFromDateInput, #eventFilterToDateInput').prop('min', function() {
+        return new Date().toJSON().split('T')[0];
+    });
 
     var eventItems = $('.event-item');
     $('#eventFilterFromDateInput').val((new Date()).toISOString().split(/\T/)[0]);
