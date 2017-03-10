@@ -176,7 +176,7 @@ webshim.polyfill('forms forms-ext');
     });
 
     var eventItems = $('.event-item');
-    $('#eventFilterFromDateInput').val((new Date()).toISOString().split(/\T/)[0]);
+    // $('#eventFilterFromDateInput').val((new Date()).toISOString().split(/\T/)[0]);
 
     $('#eventFilterFromDateInput').on('change', function() {
         var toDate = $('#eventFilterToDateInput').val();

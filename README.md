@@ -126,9 +126,24 @@ It is also possible to add text input elements on the same page as the above sho
 
 This will add the possibility to filter the events by its city's name.
 
-To allow filtering by a date range, add two input elements with type="date" with the following ids:
-`<input type="date" placeholder="From" id="eventFilterFromDateInput">`
-`<input type="date" placeholder="To" id="eventFilterToDateInput">`
+To allow filtering by a date range, add two input elements with type="date" wrapped in a form element with the following attributes:
+
+```
+<form action="#" class="ws-validate">
+    <input data-dependent-validation='{"from": "eventFilterToDateInput", "prop": "max"}'
+           type="date"
+           placeholder="From"
+           id="eventFilterFromDateInput"
+           style="float:left;">
+    <input data-dependent-validation='{"from": "eventFilterFromDateInput", "prop": "min"}'
+           type="date"
+           placeholder="To"
+           id="eventFilterToDateInput"
+           style="float:left;">
+</form>
+```
+
+**NOTE**: We use webshim to customize and add extra functionalities (such as client-side validation on HTML5's date input element). See [https://afarkas.github.io/webshim/demos/](https://afarkas.github.io/webshim/demos/)
 
 To add a map of events:
 `[event_map id="foo" scrollWheel="true"]`
